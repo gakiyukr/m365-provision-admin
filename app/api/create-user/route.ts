@@ -55,7 +55,7 @@ async function persistProvisionRecord(
     await createProvisionRecord(client, record);
     return null;
   } catch {
-    return "Failed to persist provisioning record";
+    return "無法寫入建立記錄";
   }
 }
 
@@ -64,7 +64,7 @@ async function persistAuditLog(client: ReturnType<typeof createServerSupabaseCli
     await createAuditLog(client, entry);
     return null;
   } catch {
-    return "Failed to persist audit log";
+    return "無法寫入稽核記錄";
   }
 }
 
@@ -79,7 +79,7 @@ function validateCreateUserRequestBody(body: unknown) {
     return {
       ok: false as const,
       details: {
-        body: "Request body must be a JSON object",
+        body: "請求內容必須是 JSON 物件",
       },
     };
   }
@@ -108,45 +108,45 @@ function validateCreateUserRequestBody(body: unknown) {
     candidate.captchaToken === undefined ? "" : typeof candidate.captchaToken === "string" ? candidate.captchaToken : null;
 
   if (!displayName) {
-    details.displayName = "displayName is required";
+    details.displayName = "必填";
   }
 
   if (!userName) {
-    details.userName = "userName is required";
+    details.userName = "必填";
   }
 
   if (!userPrincipalName || !isValidEmailAddress(userPrincipalName)) {
-    details.userPrincipalName = "userPrincipalName must be a valid email address";
+    details.userPrincipalName = "必須是有效的電子郵件地址";
   }
 
   if (mailNickname === null) {
-    details.mailNickname = "mailNickname must be a string when provided";
+    details.mailNickname = "若提供郵件別名，必須是字串";
   }
 
   if (!password) {
-    details.password = "password is required";
+    details.password = "必填";
   }
 
   if (!/^[A-Za-z]{2}$/.test(usageLocation)) {
-    details.usageLocation = "usageLocation must be a 2-letter code";
+    details.usageLocation = "必須是 2 碼地區代號";
   }
 
   if (typeof candidate.forceChangePasswordNextSignIn !== "boolean") {
-    details.forceChangePasswordNextSignIn = "forceChangePasswordNextSignIn must be a boolean";
+    details.forceChangePasswordNextSignIn = "必須是布林值";
   }
 
   if (selectedTemplateId === undefined) {
-    details.selectedTemplateId = "selectedTemplateId must be a string or null when provided";
+    details.selectedTemplateId = "若提供模板 ID，必須是字串或 null";
   }
 
   if (candidate.selectedFeatureIds !== undefined && !Array.isArray(candidate.selectedFeatureIds)) {
-    details.selectedFeatureIds = "selectedFeatureIds must be an array of strings";
+    details.selectedFeatureIds = "必須是字串陣列";
   } else if (Array.isArray(candidate.selectedFeatureIds) && selectedFeatureIds.length !== candidate.selectedFeatureIds.length) {
-    details.selectedFeatureIds = "selectedFeatureIds must be an array of strings";
+    details.selectedFeatureIds = "必須是字串陣列";
   }
 
   if (captchaToken === null) {
-    details.captchaToken = "captchaToken must be a string when provided";
+    details.captchaToken = "若提供 CAPTCHA Token，必須是字串";
   }
 
   if (Object.keys(details).length > 0) {
@@ -177,7 +177,7 @@ export async function POST(request: Request) {
   const admin = await readSessionFromRequest(request);
 
   if (!admin) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "未授權" }, { status: 401 });
   }
 
   try {
@@ -186,7 +186,7 @@ export async function POST(request: Request) {
     if (!payloadResult.ok) {
       return NextResponse.json(
         {
-          error: "Invalid request payload",
+          error: "請求內容格式不正確",
           details: payloadResult.details,
         },
         { status: 400 },
@@ -215,7 +215,7 @@ export async function POST(request: Request) {
     });
 
     if (!captchaResult.success) {
-      return NextResponse.json({ error: "CAPTCHA verification failed" }, { status: 400 });
+      return NextResponse.json({ error: "CAPTCHA 驗證失敗" }, { status: 400 });
     }
 
     const [rules, catalog] = await Promise.all([
@@ -229,7 +229,7 @@ export async function POST(request: Request) {
     if (missingFeatureIds.length > 0) {
       return NextResponse.json(
         {
-          error: "One or more selected features are no longer available",
+          error: "一個或多個已選功能項目前已不可用",
           missingFeatureIds,
         },
         { status: 409 },
@@ -240,7 +240,7 @@ export async function POST(request: Request) {
     const selectedSku = pickBestSku(catalog, resolved.planNames, resolved.planIds);
 
     if (!selectedSku) {
-      const message = "No assignable SKU satisfies the selected feature set";
+      const message = "沒有可分配的 SKU 能滿足所選功能項";
 
       await persistProvisionRecord(client, {
         admin_id: admin.adminId,
@@ -330,7 +330,7 @@ export async function POST(request: Request) {
           : { ok: true, graphUserId },
       );
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Provisioning failed";
+      const message = error instanceof Error ? error.message : "建立使用者流程失敗";
       const warnings = [
         await persistProvisionRecord(client, {
           admin_id: admin.adminId,
@@ -377,7 +377,7 @@ export async function POST(request: Request) {
     }
   } catch (error) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to create user" },
+      { error: error instanceof Error ? error.message : "無法建立使用者" },
       { status: 500 },
     );
   }

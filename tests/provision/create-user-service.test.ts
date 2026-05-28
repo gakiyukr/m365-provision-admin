@@ -340,6 +340,18 @@ describe("GET /api/create-user/options", () => {
       defaultUsageLocation: "US",
     });
   });
+
+  it("returns 500 when options loading fails", async () => {
+    readSessionFromRequest.mockResolvedValue({ adminId: "admin-1", username: "owner" });
+    createServerSupabaseClient.mockReturnValue({ tag: "supabase-client" });
+    listEnabledTemplatesWithFeatureIds.mockRejectedValue(new Error("無法載入建立使用者選項"));
+
+    const { GET } = await import("@/app/api/create-user/options/route");
+    const response = await GET(new Request("http://localhost/api/create-user/options"));
+
+    expect(response.status).toBe(500);
+    await expect(response.json()).resolves.toEqual({ error: "無法載入建立使用者選項" });
+  });
 });
 
 describe("POST /api/create-user", () => {
@@ -387,18 +399,18 @@ describe("POST /api/create-user", () => {
 
     expect(response.status).toBe(400);
     await expect(response.json()).resolves.toEqual({
-      error: "Invalid request payload",
+      error: "請求內容格式不正確",
       details: {
-        displayName: "displayName is required",
-        userName: "userName is required",
-        userPrincipalName: "userPrincipalName must be a valid email address",
-        mailNickname: "mailNickname must be a string when provided",
-        password: "password is required",
-        usageLocation: "usageLocation must be a 2-letter code",
-        forceChangePasswordNextSignIn: "forceChangePasswordNextSignIn must be a boolean",
-        selectedTemplateId: "selectedTemplateId must be a string or null when provided",
-        selectedFeatureIds: "selectedFeatureIds must be an array of strings",
-        captchaToken: "captchaToken must be a string when provided",
+        displayName: "必填",
+        userName: "必填",
+        userPrincipalName: "必須是有效的電子郵件地址",
+        mailNickname: "若提供郵件別名，必須是字串",
+        password: "必填",
+        usageLocation: "必須是 2 碼地區代號",
+        forceChangePasswordNextSignIn: "必須是布林值",
+        selectedTemplateId: "若提供模板 ID，必須是字串或 null",
+        selectedFeatureIds: "必須是字串陣列",
+        captchaToken: "若提供 CAPTCHA Token，必須是字串",
       },
     });
     expect(verifyCaptchaToken).not.toHaveBeenCalled();
@@ -490,7 +502,7 @@ describe("POST /api/create-user", () => {
 
     expect(response.status).toBe(409);
     await expect(response.json()).resolves.toEqual({
-      error: "No assignable SKU satisfies the selected feature set",
+      error: "沒有可分配的 SKU 能滿足所選功能項",
     });
     expect(createGraphUser).not.toHaveBeenCalled();
     expect(assignGraphLicense).not.toHaveBeenCalled();
@@ -511,7 +523,7 @@ describe("POST /api/create-user", () => {
         disabled_service_plans: [],
         graph_user_id: null,
         status: "failed",
-        error_message: "No assignable SKU satisfies the selected feature set",
+        error_message: "沒有可分配的 SKU 能滿足所選功能項",
       }),
     );
     expect(createAuditLog).not.toHaveBeenCalled();
@@ -579,7 +591,7 @@ describe("POST /api/create-user", () => {
 
     expect(response.status).toBe(409);
     await expect(response.json()).resolves.toEqual({
-      error: "One or more selected features are no longer available",
+      error: "一個或多個已選功能項目前已不可用",
       missingFeatureIds: ["feature-missing"],
     });
     expect(createGraphUser).not.toHaveBeenCalled();
@@ -650,7 +662,7 @@ describe("POST /api/create-user", () => {
 
     expect(response.status).toBe(409);
     await expect(response.json()).resolves.toEqual({
-      error: "One or more selected features are no longer available",
+      error: "一個或多個已選功能項目前已不可用",
       missingFeatureIds: ["feature-disabled"],
     });
     expect(createGraphUser).not.toHaveBeenCalled();
@@ -843,7 +855,7 @@ describe("POST /api/create-user", () => {
     await expect(response.json()).resolves.toEqual({
       ok: true,
       graphUserId: "graph-123",
-      warnings: ["Failed to persist provisioning record", "Failed to persist audit log"],
+      warnings: ["無法寫入建立記錄", "無法寫入稽核記錄"],
     });
     expect(createGraphUser).toHaveBeenCalledOnce();
     expect(assignGraphLicense).toHaveBeenCalledWith("graph-123", "sku-1", ["teams-id"]);
@@ -915,7 +927,7 @@ describe("POST /api/create-user", () => {
     await expect(response.json()).resolves.toEqual({
       error: "assignLicense failed",
       graphUserId: "graph-123",
-      warnings: ["Failed to persist provisioning record"],
+      warnings: ["無法寫入建立記錄"],
     });
     expect(createProvisionRecord).toHaveBeenCalledWith(
       { tag: "supabase-client" },
