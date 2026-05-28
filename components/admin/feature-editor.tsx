@@ -20,7 +20,7 @@ export function FeatureEditor({ features }: { features: VisibleFeature[] }) {
             color: "#42526b",
           }}
         >
-          No visible features are configured.
+          目前沒有可見的功能項設定。
         </div>
       ) : (
         features.map((feature) => (
@@ -40,7 +40,7 @@ export function FeatureEditor({ features }: { features: VisibleFeature[] }) {
               <span style={{ color: "#42526b", fontSize: "0.9rem" }}>#{feature.sort_order}</span>
             </div>
             <div style={{ color: "#173563", fontSize: "0.9rem" }}>{feature.key}</div>
-            <p style={{ margin: 0, color: "#42526b", lineHeight: 1.6 }}>{feature.description || "No description provided."}</p>
+            <p style={{ margin: 0, color: "#42526b", lineHeight: 1.6 }}>{feature.description || "尚未提供說明。"}</p>
             <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
               <span
                 style={{
@@ -51,7 +51,7 @@ export function FeatureEditor({ features }: { features: VisibleFeature[] }) {
                   fontSize: "0.85rem",
                 }}
               >
-                {feature.is_default_selected ? "Default selected" : "Optional"}
+                {feature.is_default_selected ? "預設選取" : "可選"}
               </span>
               <span
                 style={{
@@ -62,7 +62,7 @@ export function FeatureEditor({ features }: { features: VisibleFeature[] }) {
                   fontSize: "0.85rem",
                 }}
               >
-                Frontend visible
+                前台可見
               </span>
             </div>
           </article>

@@ -54,7 +54,7 @@ describe("POST /api/auth/login", () => {
     const response = await POST(request);
 
     expect(response.status).toBe(401);
-    await expect(response.json()).resolves.toEqual({ error: "Invalid credentials" });
+    await expect(response.json()).resolves.toEqual({ error: "使用者名稱或密碼錯誤" });
     expect(setSessionCookie).not.toHaveBeenCalled();
     expect(touchAdminLastLogin).not.toHaveBeenCalled();
   });

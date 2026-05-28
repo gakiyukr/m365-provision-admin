@@ -22,11 +22,11 @@ export default function LoginPage() {
         }}
       >
         <p style={{ margin: 0, fontSize: "0.8rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-          Admin access
+          管理員登入
         </p>
-        <h1 style={{ margin: "0.75rem 0 0", fontSize: "2rem" }}>Sign in</h1>
+        <h1 style={{ margin: "0.75rem 0 0", fontSize: "2rem" }}>登入</h1>
         <p style={{ margin: "0.75rem 0 1.5rem", color: "#42526b", lineHeight: 1.6 }}>
-          Use your admin credentials to continue to the provisioning workspace.
+          請使用管理員帳號與密碼登入，繼續進入建立使用者工作區。
         </p>
         <LoginForm />
       </section>

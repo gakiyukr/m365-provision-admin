@@ -10,7 +10,7 @@ type LoginResponse = {
 
 export function LoginForm() {
   const router = useRouter();
-  const networkErrorMessage = "Unable to sign in";
+  const networkErrorMessage = "無法登入";
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -62,14 +62,14 @@ export function LoginForm() {
     <section>
       <form onSubmit={handleSubmit}>
         <label>
-          Username
+          使用者名稱
           <input autoComplete="username" name="username" type="text" />
         </label>
         <label>
-          Password
+          密碼
           <input autoComplete="current-password" name="password" type="password" />
         </label>
-        <button type="submit">Sign in</button>
+        <button type="submit">登入</button>
         <p aria-live="polite" data-login-error="" role="status" />
       </form>
     </section>

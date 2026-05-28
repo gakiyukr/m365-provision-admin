@@ -19,7 +19,7 @@ export async function POST(request: Request) {
   const admin = await readSessionFromRequest(request);
 
   if (!admin) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "未授權" }, { status: 401 });
   }
 
   try {
@@ -75,7 +75,7 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to preview license selection" },
+      { error: error instanceof Error ? error.message : "無法預覽授權選擇" },
       { status: 500 },
     );
   }

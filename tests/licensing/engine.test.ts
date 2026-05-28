@@ -273,7 +273,7 @@ describe("POST /api/license-preview", () => {
     const response = await POST(new Request("http://localhost/api/license-preview", { method: "POST" }));
 
     expect(response.status).toBe(401);
-    await expect(response.json()).resolves.toEqual({ error: "Unauthorized" });
+    await expect(response.json()).resolves.toEqual({ error: "未授權" });
   });
 
   it("returns the selected SKU, enabled applications, and unavailable features", async () => {

@@ -23,19 +23,19 @@ export function RecordsTable({
         <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "58rem" }}>
           <thead style={{ background: "#eef4fb" }}>
             <tr>
-              <th style={{ padding: "0.9rem", textAlign: "left" }}>Created</th>
-              <th style={{ padding: "0.9rem", textAlign: "left" }}>User</th>
-              <th style={{ padding: "0.9rem", textAlign: "left" }}>Template</th>
+              <th style={{ padding: "0.9rem", textAlign: "left" }}>建立時間</th>
+              <th style={{ padding: "0.9rem", textAlign: "left" }}>使用者</th>
+              <th style={{ padding: "0.9rem", textAlign: "left" }}>模板</th>
               <th style={{ padding: "0.9rem", textAlign: "left" }}>SKU</th>
-              <th style={{ padding: "0.9rem", textAlign: "left" }}>Status</th>
-              <th style={{ padding: "0.9rem", textAlign: "left" }}>Error</th>
+              <th style={{ padding: "0.9rem", textAlign: "left" }}>狀態</th>
+              <th style={{ padding: "0.9rem", textAlign: "left" }}>錯誤</th>
             </tr>
           </thead>
           <tbody>
             {records.length === 0 ? (
               <tr>
                 <td colSpan={6} style={{ padding: "1rem", color: "#42526b" }}>
-                  No provision records are available yet.
+                  目前還沒有建立記錄。
                 </td>
               </tr>
             ) : (
@@ -47,7 +47,7 @@ export function RecordsTable({
                     <div style={{ color: "#42526b", marginTop: "0.35rem" }}>{record.user_principal_name}</div>
                   </td>
                   <td style={{ padding: "1rem", verticalAlign: "top" }}>
-                    {record.template_id ? templateNames[record.template_id] ?? record.template_id : "Custom"}
+                    {record.template_id ? templateNames[record.template_id] ?? record.template_id : "自訂"}
                   </td>
                   <td style={{ padding: "1rem", verticalAlign: "top" }}>{record.selected_sku_part_number ?? "—"}</td>
                   <td style={{ padding: "1rem", verticalAlign: "top" }}>{record.status}</td>

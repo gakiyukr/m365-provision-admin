@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   const password = body?.password;
 
   if (!username || !password) {
-    return NextResponse.json({ error: "Username and password are required" }, { status: 400 });
+    return NextResponse.json({ error: "必須提供使用者名稱與密碼" }, { status: 400 });
   }
 
   const client = createServerSupabaseClient();
@@ -25,13 +25,13 @@ export async function POST(request: Request) {
 
   if (!admin) {
     await verifyPassword(password, FALLBACK_PASSWORD_HASH);
-    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+    return NextResponse.json({ error: "使用者名稱或密碼錯誤" }, { status: 401 });
   }
 
   const passwordMatches = await verifyPassword(password, admin.password_hash);
 
   if (!passwordMatches) {
-    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+    return NextResponse.json({ error: "使用者名稱或密碼錯誤" }, { status: 401 });
   }
 
   const token = await createSessionToken({

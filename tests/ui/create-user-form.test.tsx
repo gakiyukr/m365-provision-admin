@@ -52,8 +52,8 @@ describe("CreateUserForm", () => {
         {
           id: "template-mailbox",
           key: "mailbox",
-          name: "Mailbox Only",
-          description: "Exchange only access",
+          name: "信箱專用",
+          description: "僅包含 Exchange 權限",
           sort_order: 10,
           featureIds: ["feature-exchange"],
         },
@@ -63,15 +63,15 @@ describe("CreateUserForm", () => {
           id: "feature-exchange",
           key: "exchange",
           name: "Exchange Online",
-          description: "Mailbox access",
+          description: "信箱存取",
           is_default_selected: true,
           sort_order: 10,
         },
         {
           id: "feature-archive",
           key: "archive",
-          name: "Online Archive",
-          description: "Archive mailbox",
+          name: "線上封存",
+          description: "封存信箱",
           is_default_selected: false,
           sort_order: 20,
         },
@@ -93,19 +93,19 @@ describe("CreateUserForm", () => {
       .filter((value) => typeof value === "string");
 
     expect(element.type).toBe("section");
-    expect(copyText).toContain("Provision a Microsoft 365 account and record the resulting license decision.");
+    expect(copyText).toContain("建立 Microsoft 365 帳號，並記錄最終授權分配結果。");
     expect(form.type).toBe("form");
-    expect(labels).toContain("Display name");
-    expect(labels).toContain("User name");
-    expect(labels).toContain("User principal name");
-    expect(labels).toContain("Mail nickname");
-    expect(labels).toContain("Temporary password");
-    expect(labels).toContain("Usage location");
-    expect(labels).toContain("Force password reset at next sign-in");
-    expect(labels).toContain("Provision user");
-    expect(JSON.stringify(element)).toContain("Mailbox Only");
+    expect(labels).toContain("顯示名稱");
+    expect(labels).toContain("使用者名稱");
+    expect(labels).toContain("使用者主體名稱");
+    expect(labels).toContain("郵件別名");
+    expect(labels).toContain("暫時密碼");
+    expect(labels).toContain("使用地區");
+    expect(labels).toContain("下次登入時強制修改密碼");
+    expect(labels).toContain("建立使用者");
+    expect(JSON.stringify(element)).toContain("信箱專用");
     expect(JSON.stringify(element)).toContain("Exchange Online");
-    expect(JSON.stringify(element)).toContain("Online Archive");
+    expect(JSON.stringify(element)).toContain("線上封存");
     expect(JSON.stringify(element)).toContain("turnstile");
     expect(JSON.stringify(element)).toContain("US");
   });
@@ -116,8 +116,8 @@ describe("CreateUserForm", () => {
       {
         id: "template-mailbox",
         key: "mailbox",
-        name: "Mailbox Only",
-        description: "Exchange only access",
+        name: "信箱專用",
+        description: "僅包含 Exchange 權限",
         sort_order: 10,
         featureIds: ["feature-exchange"],
       },
@@ -127,7 +127,7 @@ describe("CreateUserForm", () => {
         id: "feature-exchange",
         key: "exchange",
         name: "Exchange Online",
-        description: "Mailbox access",
+        description: "信箱存取",
         is_default_selected: true,
         sort_order: 10,
       },
@@ -237,8 +237,8 @@ describe("CreateUserForm", () => {
         {
           id: "template-mailbox",
           key: "mailbox",
-          name: "Mailbox Only",
-          description: "Exchange plus hidden compliance feature",
+          name: "信箱專用",
+          description: "包含 Exchange 與隱藏的合規功能",
           sort_order: 10,
           featureIds: ["feature-exchange", "feature-hidden"],
         },
@@ -248,7 +248,7 @@ describe("CreateUserForm", () => {
           id: "feature-exchange",
           key: "exchange",
           name: "Exchange Online",
-          description: "Mailbox access",
+          description: "信箱存取",
           is_default_selected: true,
           sort_order: 10,
         },
@@ -257,15 +257,19 @@ describe("CreateUserForm", () => {
 
     const children = Array.isArray(element.props.children) ? element.props.children : [element.props.children];
     const form = children.find((child: { type?: string }) => child?.type === "form");
-    const formChildren = Array.isArray(form.props.children) ? form.props.children : [form.props.children];
-    const templateLabel = formChildren.find((child: { props?: { children?: unknown } }) => {
-      const nested = Array.isArray(child?.props?.children) ? child.props.children : [child?.props?.children];
-      return nested.includes("Template preset");
-    });
-    const previewButton = formChildren.find(
-      (child: { type?: string; props?: { type?: string; children?: unknown } }) =>
-        child?.type === "button" && child.props?.type === "button",
+    const templateSelectElement = findElement(
+      form,
+      (candidate) => candidate.type === "select" && candidate.props?.name === "selectedTemplateId",
     );
+    const previewButton = findElement(
+      form,
+      (candidate) => candidate.type === "button" && candidate.props?.type === "button",
+    );
+    const checkboxElement = findElement(
+      form,
+      (candidate) => candidate.type === "input" && candidate.props?.name === "selectedFeatureIds",
+    );
+
     const featureCheckbox = {
       value: "feature-exchange",
       checked: true,
@@ -279,9 +283,9 @@ describe("CreateUserForm", () => {
     const previewStatus = { textContent: "" };
     const submitStatus = { textContent: "" };
     const formValues = new Map<string, string>([
-      ["displayName", "Avery Chen"],
-      ["userName", "avery.chen"],
-      ["userPrincipalName", "avery.chen@contoso.com"],
+      ["displayName", "陳冠宇"],
+      ["userName", "chen.guanyu"],
+      ["userPrincipalName", "chen.guanyu@contoso.com"],
       ["mailNickname", ""],
       ["password", "Password123!"],
       ["usageLocation", "US"],
@@ -322,11 +326,9 @@ describe("CreateUserForm", () => {
       },
     };
 
-    const templateChildren = Array.isArray(templateLabel.props.children) ? templateLabel.props.children : [templateLabel.props.children];
-    const templateSelectElement = templateChildren.find((child: { type?: string }) => child?.type === "select");
     templateSelect.value = "template-mailbox";
 
-    templateSelectElement.props.onChange({
+    templateSelectElement?.props?.onChange({
       currentTarget: {
         form: formDouble,
         value: "template-mailbox",
@@ -345,7 +347,7 @@ describe("CreateUserForm", () => {
       }),
     );
 
-    previewButton.props.onClick({
+    previewButton?.props?.onClick({
       currentTarget: {
         form: formDouble,
       },
@@ -365,9 +367,9 @@ describe("CreateUserForm", () => {
       "/api/create-user",
       expect.objectContaining({
         body: JSON.stringify({
-          displayName: "Avery Chen",
-          userName: "avery.chen",
-          userPrincipalName: "avery.chen@contoso.com",
+          displayName: "陳冠宇",
+          userName: "chen.guanyu",
+          userPrincipalName: "chen.guanyu@contoso.com",
           mailNickname: "",
           password: "Password123!",
           usageLocation: "US",
@@ -379,15 +381,11 @@ describe("CreateUserForm", () => {
       }),
     );
 
-    const checkboxElement = findElement(form, (candidate) => {
-      return candidate.type === "input" && candidate.props?.name === "selectedFeatureIds";
-    });
-
     featureCheckbox.checked = false;
     templateSelect.value = "template-mailbox";
     formValues.set("selectedTemplateId", "");
 
-    checkboxElement.props.onChange({
+    checkboxElement?.props?.onChange({
       currentTarget: {
         form: formDouble,
       },
@@ -425,8 +423,8 @@ describe("CreateUserForm", () => {
         {
           id: "template-mailbox",
           key: "mailbox",
-          name: "Mailbox Only",
-          description: "Exchange only access",
+          name: "信箱專用",
+          description: "僅包含 Exchange 權限",
           sort_order: 10,
           featureIds: ["feature-exchange"],
         },
@@ -436,7 +434,7 @@ describe("CreateUserForm", () => {
           id: "feature-exchange",
           key: "exchange",
           name: "Exchange Online",
-          description: "Mailbox access",
+          description: "信箱存取",
           is_default_selected: true,
           sort_order: 10,
         },
@@ -445,9 +443,9 @@ describe("CreateUserForm", () => {
 
     const children = Array.isArray(element.props.children) ? element.props.children : [element.props.children];
     const form = children.find((child: { type?: string }) => child?.type === "form");
-    const formChildren = Array.isArray(form.props.children) ? form.props.children : [form.props.children];
-    const previewButton = formChildren.find(
-      (child: { type?: string; props?: { type?: string } }) => child?.type === "button" && child.props?.type === "button",
+    const previewButton = findElement(
+      form,
+      (candidate) => candidate.type === "button" && candidate.props?.type === "button",
     );
 
     const previewStatus = { textContent: "" };
@@ -477,12 +475,12 @@ describe("CreateUserForm", () => {
       },
     };
 
-    previewButton.props.onClick({
+    previewButton?.props?.onClick({
       currentTarget: {
         form: formDouble,
       },
     });
-    previewButton.props.onClick({
+    previewButton?.props?.onClick({
       currentTarget: {
         form: formDouble,
       },

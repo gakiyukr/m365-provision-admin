@@ -16,7 +16,7 @@ export function PolicyEditor({ subscriptions }: { subscriptions: SubscriptionCat
             color: "#42526b",
           }}
         >
-          Subscription policies will appear here after the first sync.
+          第一次同步完成後，訂閱策略會顯示在這裡。
         </div>
       ) : (
         subscriptions.map((subscription) => {
@@ -38,22 +38,22 @@ export function PolicyEditor({ subscriptions }: { subscriptions: SubscriptionCat
               <div style={{ display: "flex", justifyContent: "space-between", gap: "0.75rem", alignItems: "baseline", flexWrap: "wrap" }}>
                 <strong>{subscription.sku_part_number}</strong>
                 <span style={{ color: "#42526b" }}>
-                  Assignable: {subscription.policy?.is_assignable ? "Yes" : "No"} | Priority: {subscription.policy?.priority ?? "—"}
+                  可分配：{subscription.policy?.is_assignable ? "是" : "否"} | 優先級：{subscription.policy?.priority ?? "—"}
                 </span>
               </div>
-              <p style={{ margin: 0, color: "#42526b", lineHeight: 1.6 }}>{subscription.policy?.notes || "No subscription notes recorded."}</p>
+              <p style={{ margin: 0, color: "#42526b", lineHeight: 1.6 }}>{subscription.policy?.notes || "尚未記錄訂閱備註。"}</p>
               <div style={{ display: "grid", gap: "0.5rem" }}>
                 <div>
-                  <strong>Forced keep plans:</strong>{" "}
+                  <strong>必須保留的服務方案：</strong>{" "}
                   {forcedKeepPlans.length === 0
-                    ? "None"
-                    : forcedKeepPlans.map((policy) => policy.service_plan_name).join(", ")}
+                    ? "無"
+                    : forcedKeepPlans.map((policy) => policy.service_plan_name).join("、")}
                 </div>
                 <div>
-                  <strong>Forbidden plans:</strong>{" "}
+                  <strong>禁止使用的服務方案：</strong>{" "}
                   {forbiddenPlans.length === 0
-                    ? "None"
-                    : forbiddenPlans.map((policy) => policy.service_plan_name).join(", ")}
+                    ? "無"
+                    : forbiddenPlans.map((policy) => policy.service_plan_name).join("、")}
                 </div>
               </div>
             </article>

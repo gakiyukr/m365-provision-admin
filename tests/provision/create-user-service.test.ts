@@ -283,7 +283,7 @@ describe("GET /api/create-user/options", () => {
     const response = await GET(new Request("http://localhost/api/create-user/options"));
 
     expect(response.status).toBe(401);
-    await expect(response.json()).resolves.toEqual({ error: "Unauthorized" });
+    await expect(response.json()).resolves.toEqual({ error: "未授權" });
   });
 
   it("returns template, feature, and captcha options for the form", async () => {

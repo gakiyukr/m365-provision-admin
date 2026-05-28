@@ -35,9 +35,9 @@ describe("LoginForm", () => {
 
     expect(element.type).toBe("section");
     expect(form.type).toBe("form");
-    expect(textLabels).toContain("Username");
-    expect(textLabels).toContain("Password");
-    expect(textLabels).toContain("Sign in");
+    expect(textLabels).toContain("使用者名稱");
+    expect(textLabels).toContain("密碼");
+    expect(textLabels).toContain("登入");
   });
 
   it("renders the login page with the LoginForm component", async () => {
@@ -60,7 +60,7 @@ describe("LoginForm", () => {
     const replace = vi.fn();
     const refresh = vi.fn();
     const fetchMock = vi.fn().mockRejectedValue(new Error("network down"));
-    const errorElement = { textContent: "stale error" };
+    const errorElement = { textContent: "舊錯誤" };
 
     useRouter.mockReturnValue({ replace, refresh });
     vi.stubGlobal("fetch", fetchMock);
@@ -95,7 +95,7 @@ describe("LoginForm", () => {
         body: JSON.stringify({ username: "owner", password: "secret-pass" }),
       }),
     );
-    expect(errorElement.textContent).toBe("Unable to sign in");
+    expect(errorElement.textContent).toBe("無法登入");
     expect(replace).not.toHaveBeenCalled();
     expect(refresh).not.toHaveBeenCalled();
   });
