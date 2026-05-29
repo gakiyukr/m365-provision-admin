@@ -1,0 +1,16 @@
+
+> office-365-user-admin@1.0.0 dev
+> next dev --port 3000
+
+   ▲ Next.js 15.5.18
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.186.1:3000
+
+ ✓ Starting...
+ ✓ Ready in 3.7s
+ ○ Compiling / ...
+ ✓ Compiled /login in 7.7s (866 modules)
+ GET /login 200 in 6444ms
+ GET / 500 in 8697ms
+ GET /create-user 307 in 8804ms
+ GET / 500 in 173ms

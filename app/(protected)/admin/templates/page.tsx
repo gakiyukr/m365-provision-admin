@@ -1,4 +1,5 @@
 import React from "react";
+import { AdminNav } from "@/components/admin/admin-nav";
 import { TemplateEditor } from "@/components/admin/template-editor";
 import { listVisibleFeatures } from "@/lib/supabase/features";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
@@ -21,14 +22,7 @@ export default async function AdminTemplatesPage() {
         <p style={{ margin: 0, color: "#42526b", lineHeight: 1.6 }}>
           查看目前啟用的建立使用者模板，以及它們對應的功能組合。
         </p>
-        <nav style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
-          <a href="/create-user">建立使用者</a>
-          <a href="/admin/subscriptions">訂閱</a>
-          <a href="/admin/features">功能項</a>
-          <a href="/admin/policies">策略</a>
-          <a href="/admin/records">記錄</a>
-          <a href="/admin/settings">設定</a>
-        </nav>
+        <AdminNav />
       </section>
       <TemplateEditor features={features} templates={templates} />
     </main>

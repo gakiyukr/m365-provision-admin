@@ -13,7 +13,6 @@ process.env.SUPABASE_SERVICE_ROLE_KEY ??= "service-role-key";
 process.env.CAPTCHA_ENABLED ??= "false";
 
 const getGraphToken = vi.fn();
-const readSessionFromRequest = vi.fn();
 const createServerSupabaseClient = vi.fn();
 const listEnabledTemplatesWithFeatureIds = vi.fn();
 const listVisibleFeatures = vi.fn();
@@ -24,10 +23,6 @@ const createProvisionRecord = vi.fn();
 
 vi.mock("@/lib/graph/token", () => ({
   getGraphToken,
-}));
-
-vi.mock("@/lib/auth/session", () => ({
-  readSessionFromRequest,
 }));
 
 vi.mock("@/lib/supabase/server", () => ({
@@ -276,18 +271,7 @@ describe("GET /api/create-user/options", () => {
     vi.clearAllMocks();
   });
 
-  it("returns 401 when the admin session is missing", async () => {
-    readSessionFromRequest.mockResolvedValue(null);
-
-    const { GET } = await import("@/app/api/create-user/options/route");
-    const response = await GET(new Request("http://localhost/api/create-user/options"));
-
-    expect(response.status).toBe(401);
-    await expect(response.json()).resolves.toEqual({ error: "未授權" });
-  });
-
   it("returns template, feature, and captcha options for the form", async () => {
-    readSessionFromRequest.mockResolvedValue({ adminId: "admin-1", username: "owner" });
     createServerSupabaseClient.mockReturnValue({ tag: "supabase-client" });
     listEnabledTemplatesWithFeatureIds.mockResolvedValue([
       {
@@ -342,7 +326,6 @@ describe("GET /api/create-user/options", () => {
   });
 
   it("returns 500 when options loading fails", async () => {
-    readSessionFromRequest.mockResolvedValue({ adminId: "admin-1", username: "owner" });
     createServerSupabaseClient.mockReturnValue({ tag: "supabase-client" });
     listEnabledTemplatesWithFeatureIds.mockRejectedValue(new Error("無法載入建立使用者選項"));
 
@@ -374,7 +357,6 @@ describe("POST /api/create-user", () => {
       createAuditLog,
     }));
 
-    readSessionFromRequest.mockResolvedValue({ adminId: "admin-1", username: "owner" });
     createServerSupabaseClient.mockReturnValue({ tag: "supabase-client" });
 
     const { POST } = await import("@/app/api/create-user/route");
@@ -436,7 +418,6 @@ describe("POST /api/create-user", () => {
       createAuditLog,
     }));
 
-    readSessionFromRequest.mockResolvedValue({ adminId: "admin-1", username: "owner" });
     createServerSupabaseClient.mockReturnValue({ tag: "supabase-client" });
     verifyCaptchaToken.mockResolvedValue({ success: true });
     listFeatureRulesByIds.mockResolvedValue([
@@ -509,7 +490,7 @@ describe("POST /api/create-user", () => {
     expect(createProvisionRecord).toHaveBeenCalledWith(
       { tag: "supabase-client" },
       expect.objectContaining({
-        admin_id: "admin-1",
+        admin_id: null,
         display_name: "User One",
         user_name: "user.one",
         mail_nickname: "user.one",
@@ -543,7 +524,6 @@ describe("POST /api/create-user", () => {
       createAuditLog,
     }));
 
-    readSessionFromRequest.mockResolvedValue({ adminId: "admin-1", username: "owner" });
     createServerSupabaseClient.mockReturnValue({ tag: "supabase-client" });
     verifyCaptchaToken.mockResolvedValue({ success: true });
     listFeatureRulesByIds.mockResolvedValue([
@@ -614,7 +594,6 @@ describe("POST /api/create-user", () => {
       createAuditLog,
     }));
 
-    readSessionFromRequest.mockResolvedValue({ adminId: "admin-1", username: "owner" });
     createServerSupabaseClient.mockReturnValue({ tag: "supabase-client" });
     verifyCaptchaToken.mockResolvedValue({ success: true });
     listFeatureRulesByIds.mockResolvedValue([
@@ -685,7 +664,6 @@ describe("POST /api/create-user", () => {
       createAuditLog,
     }));
 
-    readSessionFromRequest.mockResolvedValue({ adminId: "admin-1", username: "owner" });
     createServerSupabaseClient.mockReturnValue({ tag: "supabase-client" });
     verifyCaptchaToken.mockResolvedValue({ success: true });
     listFeatureRulesByIds.mockResolvedValue([
@@ -748,7 +726,7 @@ describe("POST /api/create-user", () => {
     expect(createProvisionRecord).toHaveBeenCalledWith(
       { tag: "supabase-client" },
       {
-        admin_id: "admin-1",
+        admin_id: null,
         display_name: "User One",
         user_name: "user.one",
         mail_nickname: "user.one",
@@ -777,7 +755,7 @@ describe("POST /api/create-user", () => {
     expect(createAuditLog).toHaveBeenCalledWith(
       { tag: "supabase-client" },
       {
-        admin_id: "admin-1",
+        admin_id: null,
         action: "create_user",
         entity_type: "graph_user",
         entity_id: "graph-123",
@@ -804,7 +782,6 @@ describe("POST /api/create-user", () => {
       createAuditLog,
     }));
 
-    readSessionFromRequest.mockResolvedValue({ adminId: "admin-1", username: "owner" });
     createServerSupabaseClient.mockReturnValue({ tag: "supabase-client" });
     verifyCaptchaToken.mockResolvedValue({ success: true });
     listFeatureRulesByIds.mockResolvedValue([
@@ -877,7 +854,6 @@ describe("POST /api/create-user", () => {
       createAuditLog,
     }));
 
-    readSessionFromRequest.mockResolvedValue({ adminId: "admin-1", username: "owner" });
     createServerSupabaseClient.mockReturnValue({ tag: "supabase-client" });
     verifyCaptchaToken.mockResolvedValue({ success: true });
     listFeatureRulesByIds.mockResolvedValue([
@@ -932,7 +908,7 @@ describe("POST /api/create-user", () => {
     expect(createProvisionRecord).toHaveBeenCalledWith(
       { tag: "supabase-client" },
       {
-        admin_id: "admin-1",
+        admin_id: null,
         display_name: "User One",
         user_name: "user.one",
         mail_nickname: "user.one",
@@ -961,7 +937,7 @@ describe("POST /api/create-user", () => {
     expect(createAuditLog).toHaveBeenCalledWith(
       { tag: "supabase-client" },
       {
-        admin_id: "admin-1",
+        admin_id: null,
         action: "create_user",
         entity_type: "graph_user",
         entity_id: "graph-123",

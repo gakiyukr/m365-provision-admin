@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { readSessionFromRequest } from "@/lib/auth/session";
 import { createAuditLog } from "@/lib/audit/log";
 import { verifyCaptchaToken } from "@/lib/captcha/verify";
 import { assignGraphLicense, createGraphUser } from "@/lib/graph/users";
@@ -174,12 +173,6 @@ function validateCreateUserRequestBody(body: unknown) {
 }
 
 export async function POST(request: Request) {
-  const admin = await readSessionFromRequest(request);
-
-  if (!admin) {
-    return NextResponse.json({ error: "未授權" }, { status: 401 });
-  }
-
   try {
     const payloadResult = validateCreateUserRequestBody(await request.json());
 
@@ -243,7 +236,7 @@ export async function POST(request: Request) {
       const message = "沒有可分配的 SKU 能滿足所選功能項";
 
       await persistProvisionRecord(client, {
-        admin_id: admin.adminId,
+        admin_id: null,
         display_name: body.displayName,
         user_name: body.userName,
         mail_nickname: mailNickname,
@@ -290,7 +283,7 @@ export async function POST(request: Request) {
 
       const warnings = [
         await persistProvisionRecord(client, {
-          admin_id: admin.adminId,
+          admin_id: null,
           display_name: body.displayName,
           user_name: body.userName,
           mail_nickname: mailNickname,
@@ -308,7 +301,7 @@ export async function POST(request: Request) {
           error_message: null,
         }),
         await persistAuditLog(client, {
-          admin_id: admin.adminId,
+          admin_id: null,
           action: "create_user",
           entity_type: "graph_user",
           entity_id: graphUserId,
@@ -333,7 +326,7 @@ export async function POST(request: Request) {
       const message = error instanceof Error ? error.message : "建立使用者流程失敗";
       const warnings = [
         await persistProvisionRecord(client, {
-          admin_id: admin.adminId,
+          admin_id: null,
           display_name: body.displayName,
           user_name: body.userName,
           mail_nickname: mailNickname,
@@ -351,7 +344,7 @@ export async function POST(request: Request) {
           error_message: message,
         }),
         await persistAuditLog(client, {
-          admin_id: admin.adminId,
+          admin_id: null,
           action: "create_user",
           entity_type: "graph_user",
           entity_id: graphUserId,

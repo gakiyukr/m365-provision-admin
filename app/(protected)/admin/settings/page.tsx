@@ -1,4 +1,5 @@
 import React from "react";
+import { AdminNav } from "@/components/admin/admin-nav";
 export const dynamic = "force-dynamic";
 
 export default async function AdminSettingsPage() {
@@ -14,14 +15,7 @@ export default async function AdminSettingsPage() {
         <p style={{ margin: 0, color: "#42526b", lineHeight: 1.6 }}>
           查看目前會影響建立使用者請求與操作體驗的執行期預設值。
         </p>
-        <nav style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
-          <a href="/create-user">建立使用者</a>
-          <a href="/admin/subscriptions">訂閱</a>
-          <a href="/admin/features">功能項</a>
-          <a href="/admin/templates">模板</a>
-          <a href="/admin/policies">策略</a>
-          <a href="/admin/records">記錄</a>
-        </nav>
+        <AdminNav />
       </section>
       <section
         style={{
@@ -32,9 +26,10 @@ export default async function AdminSettingsPage() {
       >
         <article
           style={{
-            borderRadius: "1.25rem",
-            background: "rgba(255, 255, 255, 0.94)",
-            boxShadow: "0 18px 40px rgba(20, 32, 51, 0.1)",
+            border: "1px solid #dbe3ef",
+            borderRadius: "0.5rem",
+            background: "#ffffff",
+            boxShadow: "0 10px 28px rgba(21, 38, 65, 0.07)",
             padding: "1.2rem",
           }}
         >
@@ -43,9 +38,10 @@ export default async function AdminSettingsPage() {
         </article>
         <article
           style={{
-            borderRadius: "1.25rem",
-            background: "rgba(255, 255, 255, 0.94)",
-            boxShadow: "0 18px 40px rgba(20, 32, 51, 0.1)",
+            border: "1px solid #dbe3ef",
+            borderRadius: "0.5rem",
+            background: "#ffffff",
+            boxShadow: "0 10px 28px rgba(21, 38, 65, 0.07)",
             padding: "1.2rem",
           }}
         >
@@ -56,15 +52,16 @@ export default async function AdminSettingsPage() {
         </article>
         <article
           style={{
-            borderRadius: "1.25rem",
-            background: "rgba(255, 255, 255, 0.94)",
-            boxShadow: "0 18px 40px rgba(20, 32, 51, 0.1)",
+            border: "1px solid #dbe3ef",
+            borderRadius: "0.5rem",
+            background: "#ffffff",
+            boxShadow: "0 10px 28px rgba(21, 38, 65, 0.07)",
             padding: "1.2rem",
           }}
         >
           <strong>目前用途</strong>
           <p style={{ margin: "0.6rem 0 0", color: "#42526b", lineHeight: 1.6 }}>
-            受保護的建立使用者流程、Supabase 設定管理，以及 Microsoft Graph 使用者建立。
+            公開自助建立流程、Supabase 設定管理，以及 Microsoft Graph 使用者建立。
           </p>
         </article>
       </section>

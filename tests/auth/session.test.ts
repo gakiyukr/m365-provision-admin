@@ -83,7 +83,7 @@ describe("session token", () => {
 
     const { createSessionToken, readSessionFromRequest } = await import("@/lib/auth/session");
     const token = await createSessionToken({ adminId: "admin-1", username: "owner" });
-    const request = new Request("http://localhost/create-user", {
+    const request = new Request("http://localhost/admin", {
       headers: {
         cookie: `office_admin_session=${token}`,
       },
@@ -101,7 +101,7 @@ describe("session token", () => {
 
     const { createSessionToken, readSessionFromRequest } = await import("@/lib/auth/session");
     const token = await createSessionToken({ adminId: "admin-1", username: "owner" });
-    const request = new Request("http://localhost/create-user", {
+    const request = new Request("http://localhost/admin", {
       headers: {
         cookie: `office_admin_session=${token}`,
       },
@@ -115,7 +115,7 @@ describe("session token", () => {
 
     const { createSessionToken, readSessionFromRequest } = await import("@/lib/auth/session");
     const token = await createSessionToken({ adminId: "admin-1", username: "owner" });
-    const request = new Request("http://localhost/create-user", {
+    const request = new Request("http://localhost/admin", {
       headers: {
         cookie: `office_admin_session=${token}`,
       },

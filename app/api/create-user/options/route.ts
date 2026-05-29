@@ -1,17 +1,10 @@
 import { NextResponse } from "next/server";
-import { readSessionFromRequest } from "@/lib/auth/session";
 import { env } from "@/lib/env";
 import { listVisibleFeatures } from "@/lib/supabase/features";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { listEnabledTemplatesWithFeatureIds } from "@/lib/supabase/templates";
 
-export async function GET(request: Request) {
-  const admin = await readSessionFromRequest(request);
-
-  if (!admin) {
-    return NextResponse.json({ error: "未授權" }, { status: 401 });
-  }
-
+export async function GET() {
   try {
     const client = createServerSupabaseClient();
     const [templates, features] = await Promise.all([

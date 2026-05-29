@@ -1,0 +1,183 @@
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (128kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (101kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (231kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ⨯ Error [ZodError]: [
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "AZURE_TENANT_ID"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "AZURE_CLIENT_ID"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "AZURE_CLIENT_SECRET"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "SESSION_SECRET"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "DEFAULT_USAGE_LOCATION"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "NEXT_PUBLIC_SUPABASE_URL"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "NEXT_PUBLIC_SUPABASE_ANON_KEY"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "SUPABASE_SERVICE_ROLE_KEY"
+    ],
+    "message": "Required"
+  }
+]
+    at loadEnv (lib\env.ts:53:27)
+    at Object.get (lib\env.ts:59:12)
+    at createServerSupabaseClient (lib\supabase\server.ts:7:9)
+    at HomePage (app\page.tsx:10:44)
+  51 |
+  52 | function loadEnv() {
+> 53 |   cachedEnv ??= envSchema.parse(process.env);
+     |                           ^
+  54 |   return cachedEnv;
+  55 | }
+  56 | {
+  issues: [Array],
+  addIssue: [Function (anonymous)],
+  addIssues: [Function (anonymous)],
+  digest: '853568272'
+}
+ ⨯ Error [ZodError]: [
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "AZURE_TENANT_ID"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "AZURE_CLIENT_ID"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "AZURE_CLIENT_SECRET"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "SESSION_SECRET"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "DEFAULT_USAGE_LOCATION"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "NEXT_PUBLIC_SUPABASE_URL"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "NEXT_PUBLIC_SUPABASE_ANON_KEY"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "SUPABASE_SERVICE_ROLE_KEY"
+    ],
+    "message": "Required"
+  }
+]
+    at loadEnv (lib\env.ts:53:27)
+    at Object.get (lib\env.ts:59:12)
+    at createServerSupabaseClient (lib\supabase\server.ts:7:9)
+    at HomePage (app\page.tsx:10:44)
+  51 |
+  52 | function loadEnv() {
+> 53 |   cachedEnv ??= envSchema.parse(process.env);
+     |                           ^
+  54 |   return cachedEnv;
+  55 | }
+  56 | {
+  issues: [Array],
+  addIssue: [Function (anonymous)],
+  addIssues: [Function (anonymous)],
+  digest: '853568272'
+}

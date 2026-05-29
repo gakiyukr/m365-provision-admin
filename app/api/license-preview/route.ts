@@ -6,7 +6,6 @@ import {
   pickBestSku,
   resolveFeatureSelection,
 } from "@/lib/licensing/engine";
-import { readSessionFromRequest } from "@/lib/auth/session";
 import { listFeatureRulesByIds } from "@/lib/supabase/features";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { listAssignableSkuCatalog } from "@/lib/supabase/subscriptions";
@@ -16,12 +15,6 @@ type PreviewRequestBody = {
 };
 
 export async function POST(request: Request) {
-  const admin = await readSessionFromRequest(request);
-
-  if (!admin) {
-    return NextResponse.json({ error: "未授權" }, { status: 401 });
-  }
-
   try {
     const body = (await request.json()) as PreviewRequestBody;
     const featureIds = Array.isArray(body.featureIds)

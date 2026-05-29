@@ -10,14 +10,9 @@ process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??= "anon-key";
 process.env.SUPABASE_SERVICE_ROLE_KEY ??= "service-role-key";
 process.env.CAPTCHA_ENABLED ??= "false";
 
-const readSessionFromRequest = vi.fn();
 const createServerSupabaseClient = vi.fn();
 const listFeatureRulesByIds = vi.fn();
 const listAssignableSkuCatalog = vi.fn();
-
-vi.mock("@/lib/auth/session", () => ({
-  readSessionFromRequest,
-}));
 
 vi.mock("@/lib/supabase/server", () => ({
   createServerSupabaseClient,
@@ -266,18 +261,7 @@ describe("POST /api/license-preview", () => {
     vi.clearAllMocks();
   });
 
-  it("returns 401 when the admin session is missing", async () => {
-    readSessionFromRequest.mockResolvedValue(null);
-
-    const { POST } = await import("@/app/api/license-preview/route");
-    const response = await POST(new Request("http://localhost/api/license-preview", { method: "POST" }));
-
-    expect(response.status).toBe(401);
-    await expect(response.json()).resolves.toEqual({ error: "未授權" });
-  });
-
   it("returns the selected SKU, enabled applications, and unavailable features", async () => {
-    readSessionFromRequest.mockResolvedValue({ adminId: "admin-1", username: "owner" });
     createServerSupabaseClient.mockReturnValue({ tag: "supabase-client" });
     listFeatureRulesByIds.mockResolvedValue([
       {
@@ -363,7 +347,6 @@ describe("POST /api/license-preview", () => {
   });
 
   it("reports unavailable features when no SKU can satisfy them", async () => {
-    readSessionFromRequest.mockResolvedValue({ adminId: "admin-1", username: "owner" });
     createServerSupabaseClient.mockReturnValue({ tag: "supabase-client" });
     listFeatureRulesByIds.mockResolvedValue([
       {
@@ -429,7 +412,6 @@ describe("POST /api/license-preview", () => {
   });
 
   it("reports a combination failure when features are individually satisfiable but not by one SKU", async () => {
-    readSessionFromRequest.mockResolvedValue({ adminId: "admin-1", username: "owner" });
     createServerSupabaseClient.mockReturnValue({ tag: "supabase-client" });
     listFeatureRulesByIds.mockResolvedValue([
       {

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { readSessionFromRequest } from "@/lib/auth/session";
 
-export const protectedRoutePrefixes = ["/create-user", "/admin"] as const;
+export const protectedRoutePrefixes = ["/admin"] as const;
 
 export function isProtectedPath(pathname: string): boolean {
   return protectedRoutePrefixes.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));

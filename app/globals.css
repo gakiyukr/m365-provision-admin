@@ -16,9 +16,7 @@ body {
 }
 
 body {
-  background:
-    radial-gradient(circle at top, rgba(36, 92, 192, 0.12), transparent 40%),
-    linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
+  background: #f7f9fc;
 }
 
 a {

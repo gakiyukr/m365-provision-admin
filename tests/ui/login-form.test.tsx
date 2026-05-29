@@ -27,6 +27,7 @@ describe("LoginForm", () => {
     const children = Array.isArray(element.props.children) ? element.props.children : [element.props.children];
     const form = children.find((child: { type?: string }) => child?.type === "form");
     const formChildren = Array.isArray(form.props.children) ? form.props.children : [form.props.children];
+    const button = formChildren.find((child: { type?: string }) => child?.type === "button");
     const textLabels = formChildren
       .filter(Boolean)
       .map((child: { props?: { children?: unknown } }) => child.props?.children)
@@ -35,9 +36,17 @@ describe("LoginForm", () => {
 
     expect(element.type).toBe("section");
     expect(form.type).toBe("form");
-    expect(textLabels).toContain("使用者名稱");
+    expect(form.props.style).toEqual({ display: "grid", gap: "0.85rem" });
+    expect(textLabels).toContain("管理員帳號");
     expect(textLabels).toContain("密碼");
-    expect(textLabels).toContain("登入");
+    expect(textLabels).toContain("登入後台");
+    expect(button.props.style).toEqual(
+      expect.objectContaining({
+        background: "#173563",
+        borderRadius: "0.5rem",
+        color: "#ffffff",
+      }),
+    );
   });
 
   it("renders the login page with the LoginForm component", async () => {
@@ -54,6 +63,53 @@ describe("LoginForm", () => {
     const sectionChildren = Array.isArray(section.props.children) ? section.props.children : [section.props.children];
 
     expect(sectionChildren.some((child: { type?: unknown }) => child?.type === LoginForm)).toBe(true);
+    expect(JSON.stringify(page)).toContain("管理後台登入");
+  });
+
+  it("sends signed-in admins to the admin dashboard", async () => {
+    const replace = vi.fn();
+    const refresh = vi.fn();
+    const fetchMock = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }),
+    );
+    const errorElement = { textContent: "舊錯誤" };
+
+    useRouter.mockReturnValue({ replace, refresh });
+    vi.stubGlobal("fetch", fetchMock);
+    vi.stubGlobal(
+      "FormData",
+      class {
+        get(name: string) {
+          return name === "username" ? "owner" : "secret-pass";
+        }
+      },
+    );
+
+    const { LoginForm } = await import("@/components/auth/login-form");
+    const element = LoginForm({});
+    const children = Array.isArray(element.props.children) ? element.props.children : [element.props.children];
+    const form = children.find((child: { type?: string }) => child?.type === "form");
+
+    await expect(
+      form.props.onSubmit({
+        preventDefault: vi.fn(),
+        currentTarget: {
+          querySelector: vi.fn(() => errorElement),
+        },
+      }),
+    ).resolves.toBeUndefined();
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/auth/login",
+      expect.objectContaining({
+        method: "POST",
+      }),
+    );
+    expect(replace).toHaveBeenCalledWith("/admin");
+    expect(refresh).toHaveBeenCalledTimes(1);
   });
 
   it("shows a graceful error when the network request fails", async () => {

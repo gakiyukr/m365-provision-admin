@@ -1,4 +1,5 @@
 import React from "react";
+import { AdminNav } from "@/components/admin/admin-nav";
 import { RecordsTable } from "@/components/admin/records-table";
 import { listProvisionRecords } from "@/lib/supabase/records";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
@@ -23,14 +24,7 @@ export default async function AdminRecordsPage() {
         <p style={{ margin: 0, color: "#42526b", lineHeight: 1.6 }}>
           查看每次建立使用者的結果、選到的 SKU，以及部分成功或失敗訊息。
         </p>
-        <nav style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
-          <a href="/create-user">建立使用者</a>
-          <a href="/admin/subscriptions">訂閱</a>
-          <a href="/admin/features">功能項</a>
-          <a href="/admin/templates">模板</a>
-          <a href="/admin/policies">策略</a>
-          <a href="/admin/settings">設定</a>
-        </nav>
+        <AdminNav />
       </section>
       <RecordsTable records={records} templateNames={templateNames} />
     </main>

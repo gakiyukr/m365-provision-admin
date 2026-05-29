@@ -5,7 +5,7 @@ This project is a Next.js 15 admin application for creating Microsoft 365 users,
 ## Architecture
 
 - `app/`
-  - App Router pages for login, protected provisioning, admin pages, and API routes
+  - App Router pages for the public self-service front desk, admin login, protected admin pages, and API routes
 - `components/`
   - Lightweight UI for sign-in, create-user, and admin review surfaces
 - `lib/auth/`
@@ -21,8 +21,8 @@ This project is a Next.js 15 admin application for creating Microsoft 365 users,
 
 ## Request Flow
 
-1. An admin signs in through `/login`.
-2. The protected create-user page loads enabled templates and visible features from Supabase.
+1. A user opens the public self-service front desk at `/`.
+2. The front desk loads enabled templates and visible features from Supabase.
 3. The UI can call `/api/license-preview` to resolve the best matching assignable SKU for the selected features.
 4. Submitting the form calls `/api/create-user`.
 5. The server validates the payload, checks CAPTCHA if enabled, resolves the selected feature set against the synced subscription catalog, creates the Graph user, assigns the SKU, and records the result in Supabase.
@@ -43,8 +43,8 @@ This project is a Next.js 15 admin application for creating Microsoft 365 users,
 
 ## Protected Pages
 
-- `/create-user`
-  - Provisioning form, template selection, feature selection, preview, and submission shell
+- `/admin`
+  - Admin entry page for reviewing configuration, subscription catalog state, and provisioning history
 - `/admin/subscriptions`
   - Synced subscription catalog and assignability summary
 - `/admin/features`
@@ -57,6 +57,15 @@ This project is a Next.js 15 admin application for creating Microsoft 365 users,
   - Provisioning result history
 - `/admin/settings`
   - Runtime provisioning defaults such as usage location and CAPTCHA mode
+
+## Public Pages
+
+- `/`
+  - Self-service provisioning form, template selection, feature selection, preview, and submission shell
+- `/create-user`
+  - Compatibility redirect to `/`
+- `/login`
+  - Admin-only login page for the protected backend
 
 ## Environment
 

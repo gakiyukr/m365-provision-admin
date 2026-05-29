@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Microsoft 365 使用者管理後台",
-  description: "Microsoft 365 授權與建立使用者管理介面",
+  title: "Microsoft 365 使用者自助建立",
+  description: "Microsoft 365 使用者建立、授權預覽與後台管理介面",
 };
 
 export default function RootLayout({

@@ -93,7 +93,14 @@ describe("CreateUserForm", () => {
       .filter((value) => typeof value === "string");
 
     expect(element.type).toBe("section");
-    expect(copyText).toContain("建立 Microsoft 365 帳號，並記錄最終授權分配結果。");
+    expect(element.props.style).toEqual(
+      expect.objectContaining({
+        border: "1px solid #dbe3ef",
+        borderRadius: "0.5rem",
+        background: "#ffffff",
+      }),
+    );
+    expect(copyText).toContain("送出前可以先預覽授權結果，確認功能組合會落在哪一個 Microsoft 365 SKU。");
     expect(form.type).toBe("form");
     expect(labels).toContain("顯示名稱");
     expect(labels).toContain("使用者名稱");
@@ -101,7 +108,7 @@ describe("CreateUserForm", () => {
     expect(labels).toContain("郵件別名");
     expect(labels).toContain("暫時密碼");
     expect(labels).toContain("使用地區");
-    expect(labels).toContain("下次登入時強制修改密碼");
+    expect(labels).toContain("下次登入時強制變更密碼");
     expect(labels).toContain("建立使用者");
     expect(JSON.stringify(element)).toContain("信箱專用");
     expect(JSON.stringify(element)).toContain("Exchange Online");
@@ -110,7 +117,7 @@ describe("CreateUserForm", () => {
     expect(JSON.stringify(element)).toContain("US");
   });
 
-  it("renders the protected create-user page with the CreateUserForm component", async () => {
+  it("renders the public self-service home page with the CreateUserForm component", async () => {
     const createServerSupabaseClient = vi.fn(() => ({ tag: "supabase-client" }));
     const listEnabledTemplatesWithFeatureIds = vi.fn().mockResolvedValue([
       {
@@ -168,16 +175,29 @@ describe("CreateUserForm", () => {
       ),
     }));
 
-    const { default: CreateUserPage } = await import("@/app/(protected)/create-user/page");
+    const { default: CreateUserPage } = await import("@/app/page");
     const { CreateUserForm } = await import("@/components/create-user/create-user-form");
     const page = await CreateUserPage();
-    const pageChildren = Array.isArray(page.props.children) ? page.props.children : [page.props.children];
 
     expect(page.type).toBe("main");
-    expect(pageChildren.some((child: { type?: unknown }) => child?.type === CreateUserForm)).toBe(true);
+    expect(findElement(page, (candidate) => candidate.type === CreateUserForm)).toBeDefined();
     expect(createServerSupabaseClient).toHaveBeenCalledTimes(1);
     expect(listEnabledTemplatesWithFeatureIds).toHaveBeenCalledWith({ tag: "supabase-client" });
     expect(listVisibleFeatures).toHaveBeenCalledWith({ tag: "supabase-client" });
+  });
+
+  it("keeps /create-user as a redirect to the public self-service front desk", async () => {
+    const redirect = vi.fn();
+
+    vi.doMock("next/navigation", () => ({
+      redirect,
+    }));
+
+    const { default: CreateUserRedirectPage } = await import("@/app/(protected)/create-user/page");
+
+    CreateUserRedirectPage();
+
+    expect(redirect).toHaveBeenCalledWith("/");
   });
 
   it("preserves template-linked hidden feature ids for preview and submit until the template selection is broken", async () => {

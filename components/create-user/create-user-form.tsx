@@ -285,21 +285,22 @@ export function CreateUserForm({
   return (
     <section
       style={{
-        borderRadius: "1.5rem",
+        border: "1px solid #dbe3ef",
+        borderRadius: "0.5rem",
         padding: "1.5rem",
-        background: "rgba(255, 255, 255, 0.94)",
-        boxShadow: "0 24px 60px rgba(20, 32, 51, 0.12)",
+        background: "#ffffff",
+        boxShadow: "0 10px 28px rgba(21, 38, 65, 0.07)",
       }}
     >
       <p style={{ margin: "0 0 0.75rem", fontSize: "0.8rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-        建立使用者工作區
+        自助建立
       </p>
       <h1 style={{ margin: 0, fontSize: "2rem" }}>建立使用者</h1>
       <p style={{ margin: "0.75rem 0 0", color: "#42526b", lineHeight: 1.6 }}>
-        建立 Microsoft 365 帳號，並記錄最終授權分配結果。
+        送出前可以先預覽授權結果，確認功能組合會落在哪一個 Microsoft 365 SKU。
       </p>
       <p style={{ margin: "0.75rem 0 1.5rem", color: "#42526b", lineHeight: 1.6 }}>
-        先選擇模板、確認功能項、預覽匹配到的 SKU，最後再送出建立請求。
+        請填寫使用者資訊、選擇模板或功能項，確認後送出建立請求。
       </p>
       <form onSubmit={handleSubmit} style={{ display: "grid", gap: "1rem" }}>
         <label style={{ display: "grid", gap: "0.35rem" }}>
@@ -308,7 +309,7 @@ export function CreateUserForm({
             defaultValue=""
             name="displayName"
             placeholder="例如：陳冠宇"
-            style={{ borderRadius: "0.9rem", border: "1px solid #c8d4e8", padding: "0.8rem 0.9rem" }}
+            style={{ borderRadius: "0.5rem", border: "1px solid #c8d4e8", padding: "0.8rem 0.9rem" }}
             type="text"
           />
         </label>
@@ -318,7 +319,7 @@ export function CreateUserForm({
             defaultValue=""
             name="userName"
             placeholder="例如：chen.guanyu"
-            style={{ borderRadius: "0.9rem", border: "1px solid #c8d4e8", padding: "0.8rem 0.9rem" }}
+            style={{ borderRadius: "0.5rem", border: "1px solid #c8d4e8", padding: "0.8rem 0.9rem" }}
             type="text"
           />
         </label>
@@ -328,7 +329,7 @@ export function CreateUserForm({
             defaultValue=""
             name="userPrincipalName"
             placeholder="例如：chen.guanyu@contoso.com"
-            style={{ borderRadius: "0.9rem", border: "1px solid #c8d4e8", padding: "0.8rem 0.9rem" }}
+            style={{ borderRadius: "0.5rem", border: "1px solid #c8d4e8", padding: "0.8rem 0.9rem" }}
             type="email"
           />
         </label>
@@ -338,7 +339,7 @@ export function CreateUserForm({
             defaultValue=""
             name="mailNickname"
             placeholder="例如：chen.guanyu"
-            style={{ borderRadius: "0.9rem", border: "1px solid #c8d4e8", padding: "0.8rem 0.9rem" }}
+            style={{ borderRadius: "0.5rem", border: "1px solid #c8d4e8", padding: "0.8rem 0.9rem" }}
             type="text"
           />
         </label>
@@ -348,7 +349,7 @@ export function CreateUserForm({
             defaultValue=""
             name="password"
             placeholder="例如：Password123!"
-            style={{ borderRadius: "0.9rem", border: "1px solid #c8d4e8", padding: "0.8rem 0.9rem" }}
+            style={{ borderRadius: "0.5rem", border: "1px solid #c8d4e8", padding: "0.8rem 0.9rem" }}
             type="password"
           />
         </label>
@@ -358,7 +359,7 @@ export function CreateUserForm({
             defaultValue={defaultUsageLocation}
             maxLength={2}
             name="usageLocation"
-            style={{ borderRadius: "0.9rem", border: "1px solid #c8d4e8", padding: "0.8rem 0.9rem", textTransform: "uppercase" }}
+            style={{ borderRadius: "0.5rem", border: "1px solid #c8d4e8", padding: "0.8rem 0.9rem", textTransform: "uppercase" }}
             type="text"
           />
         </label>
@@ -369,7 +370,7 @@ export function CreateUserForm({
             defaultValue=""
             name="selectedTemplateId"
             onChange={handleTemplateChange}
-            style={{ borderRadius: "0.9rem", border: "1px solid #c8d4e8", padding: "0.8rem 0.9rem" }}
+            style={{ borderRadius: "0.5rem", border: "1px solid #c8d4e8", padding: "0.8rem 0.9rem" }}
           >
             <option value="">自訂選擇</option>
             {templates.map((template) => (
@@ -382,7 +383,7 @@ export function CreateUserForm({
         <fieldset
           style={{
             margin: 0,
-            borderRadius: "1rem",
+            borderRadius: "0.5rem",
             border: "1px solid #d7e2f0",
             padding: "1rem",
             display: "grid",
@@ -394,7 +395,7 @@ export function CreateUserForm({
             <p style={{ margin: 0, color: "#42526b" }}>目前沒有可用的模板。</p>
           ) : (
             templates.map((template) => (
-              <div key={template.id} style={{ borderRadius: "0.9rem", background: "#f6f9fd", padding: "0.85rem 0.95rem" }}>
+              <div key={template.id} style={{ borderRadius: "0.5rem", background: "#f6f9fd", padding: "0.85rem 0.95rem" }}>
                 <strong>{template.name}</strong>
                 <p style={{ margin: "0.35rem 0 0", color: "#42526b" }}>{template.description || "尚未提供說明。"}</p>
                 {template.featureIds.some((featureId) => !features.some((feature) => feature.id === featureId)) ? (
@@ -409,7 +410,7 @@ export function CreateUserForm({
         <fieldset
           style={{
             margin: 0,
-            borderRadius: "1rem",
+            borderRadius: "0.5rem",
             border: "1px solid #d7e2f0",
             padding: "1rem",
             display: "grid",
@@ -426,7 +427,7 @@ export function CreateUserForm({
                 style={{
                   display: "grid",
                   gap: "0.25rem",
-                  borderRadius: "0.9rem",
+                  borderRadius: "0.5rem",
                   background: "#f6f9fd",
                   padding: "0.85rem 0.95rem",
                 }}
@@ -448,7 +449,7 @@ export function CreateUserForm({
         </fieldset>
         <label style={{ display: "flex", gap: "0.6rem", alignItems: "center" }}>
           <input defaultChecked={false} name="forceChangePasswordNextSignIn" type="checkbox" />
-          下次登入時強制修改密碼
+          下次登入時強制變更密碼
         </label>
         {captchaEnabled ? (
           <label style={{ display: "grid", gap: "0.35rem" }}>
@@ -457,7 +458,7 @@ export function CreateUserForm({
               defaultValue=""
               name="captchaToken"
               placeholder="請貼上驗證挑戰 Token"
-              style={{ borderRadius: "0.9rem", border: "1px solid #c8d4e8", padding: "0.8rem 0.9rem" }}
+              style={{ borderRadius: "0.5rem", border: "1px solid #c8d4e8", padding: "0.8rem 0.9rem" }}
               type="text"
             />
           </label>
@@ -471,7 +472,7 @@ export function CreateUserForm({
           onClick={handlePreviewClick}
           style={{
             justifySelf: "start",
-            borderRadius: "999px",
+            borderRadius: "0.5rem",
             border: "1px solid #9ab0d0",
             background: "#ffffff",
             color: "#173563",
@@ -485,7 +486,7 @@ export function CreateUserForm({
         <button
           style={{
             justifySelf: "start",
-            borderRadius: "999px",
+            borderRadius: "0.5rem",
             border: 0,
             background: "#173563",
             color: "#ffffff",
