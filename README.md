@@ -36,15 +36,15 @@
 
 表单提交后，程序会按下面的顺序执行：
 
-1. 校验访问密码 `APP_PASSWORD`
-2. 校验 hCaptcha
+1. 校验 hCaptcha
+2. 校验访问密码 `APP_PASSWORD`
 3. 使用 Azure 应用凭据向 Microsoft 身份平台获取 Graph access token
 4. 读取当前租户可用的订阅 SKU
 5. 自动挑选一个包含 `EXCHANGE*` 服务计划的可用许可证
 6. 创建 Microsoft 365 用户
 7. 调用 `assignLicense`，只保留 Exchange 相关服务计划，禁用其余服务计划
 
-如果用户创建成功，但许可证分配失败，接口会返回“部分成功”结果，方便管理员手工补救。
+如果用户创建成功，但许可证分配失败，Worker 会尝试自动删除刚创建的用户，并返回“部分成功 / 已回滚”结果，方便管理员确认后重新处理。
 
 ## 前置条件
 
@@ -92,7 +92,7 @@
   访问页面时使用的管理密码。前端会要求输入，后端会校验它是否正确
 
 - `DEFAULT_USAGE_LOCATION`
-  新建用户的 `usageLocation`，通常是两位国家/地区代码，例如 `US`、`CN`、`HK`
+  新建用户的 `usageLocation`，必须是两位国家/地区代码，例如 `US`、`CN`、`HK`
 
 - `HCAPTCHA_SITE_KEY`
   hCaptcha 站点公钥。这个值会被渲染到前端页面中，属于可公开信息
@@ -104,6 +104,7 @@
 
 - `MAIL_DOMAIN`
   用户邮箱域名。默认值为 `republicofmayo.com`
+  域名必须是有效的 DNS 域名格式，例如 `contoso.com`
 
   例如：
   如果填写的用户名是 `zhangsan`，而 `MAIL_DOMAIN` 是 `contoso.com`，最终邮箱会是 `zhangsan@contoso.com`
@@ -213,6 +214,7 @@ npx wrangler secret put HCAPTCHA_SECRET
 - 它更适合“只开邮箱”的自动化场景
 - 它不会保留 Teams、SharePoint、Office 应用等非 Exchange 服务
 - 如果租户中没有满足条件的许可证，创建流程会失败
+- 如果用户已创建但许可证分配失败，Worker 会尝试删除刚创建的用户，避免留下未授权账号
 
 ## 安全注意事项
 
@@ -220,16 +222,15 @@ npx wrangler secret put HCAPTCHA_SECRET
 - 至少要启用 `APP_PASSWORD`
 - 更推荐额外套一层 Cloudflare Access
 - `AZURE_CLIENT_SECRET` 和 `HCAPTCHA_SECRET` 只能保存在服务端
-- 前端页面会显示初始密码，因此使用后应尽快通知用户修改密码
+- 页面和接口不会在创建完成后回显初始密码，管理员应通过安全渠道把初始密码交付给用户
 - 如果开启了“首次登录强制改密”，用户第一次登录后必须更新密码
 
 ## 已知行为与限制
 
 - 当前页面和后端逻辑都写在一个文件中：`src/index.js`
-- 当前版本没有自动化测试
+- 当前版本已有覆盖核心创建流程与安全回归场景的自动化测试
 - 当前版本不会让管理员手工选择许可证 SKU
 - 当前版本只保留名称以 `EXCHANGE` 开头的服务计划
-- 前端页面中有一条邮箱域名提示文字是写死的，如果你修改了 `MAIL_DOMAIN`，页面提示未必会同步变化
 
 ## 参考文档
 
@@ -241,4 +242,3 @@ npx wrangler secret put HCAPTCHA_SECRET
   https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-client-creds-grant-flow
 - Microsoft Graph: List subscribed SKUs
   https://learn.microsoft.com/en-us/graph/api/subscribedsku-list?view=graph-rest-1.0
-

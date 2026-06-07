@@ -245,7 +245,7 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
           <div class="field">
             <label for="userName">邮箱账号</label>
             <input id="userName" name="userName" type="text" placeholder="例如 zhangsan" required />
-            <div class="hint">系统会自动创建为 @republicofmayo.com 邮箱。</div>
+            <div class="hint">系统会自动创建为 @__MAIL_DOMAIN__ 邮箱。</div>
           </div>
 
           <div class="field">
@@ -255,7 +255,7 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
 
           <div class="field">
             <label for="password">初始密码</label>
-            <input id="password" name="password" type="text" placeholder="例如 StrongPass!2026" required />
+            <input id="password" name="password" type="password" placeholder="例如 StrongPass!2026" autocomplete="new-password" required />
           </div>
 
           <div class="field">
@@ -333,8 +333,7 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
             throw new Error(
               [
                 data.error || "许可证分配失败",
-                "邮箱: " + data.user.userPrincipalName,
-                "密码: " + payload.password
+                "邮箱: " + data.user.userPrincipalName
               ].join("\\n")
             );
           }
@@ -345,8 +344,7 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
           "success",
           [
             "创建成功",
-            "邮箱: " + data.user.email,
-            "密码: " + data.user.password
+            "邮箱: " + data.user.email
           ].join("\\n")
         );
       } catch (error) {
@@ -371,14 +369,11 @@ export default {
         return htmlResponse(renderHtmlPage(env));
       }
 
-      if (url.pathname.startsWith("/api/")) {
-        await verifyAppPassword(request, env);
-      }
-
       if (request.method === "POST" && url.pathname === "/api/create-user") {
-        const body = await request.json();
+        const body = await readJsonBody(request);
         validateCreatePayload(body, env);
         await verifyHCaptcha(body.hCaptchaToken, request, env);
+        verifyAppPassword(body.appPassword, env);
 
         const token = await getGraphToken(env);
         const mailDomain = getMailDomain(env);
@@ -400,7 +395,7 @@ export default {
         });
 
         try {
-          const license = await assignGraphLicense(token, user.id, {
+          await assignGraphLicense(token, user.id, {
             skuId: selectedLicense.skuId,
             disabledPlans: selectedLicense.disabledPlans,
             keptPlans: selectedLicense.keptPlans
@@ -409,15 +404,18 @@ export default {
           return jsonResponse({
             ok: true,
             user: {
-              email: user.userPrincipalName,
-              password: body.password
+              email: user.userPrincipalName
             }
           });
         } catch (error) {
+          const rollback = await rollbackCreatedUser(token, user.id);
+
           return jsonResponse(
             {
-              error: "用户已创建，但许可证分配失败: " + formatError(error),
+              error: (rollback.ok ? "用户已创建，但许可证分配失败，已自动删除该用户: " : "用户已创建，但许可证分配失败，自动删除该用户也失败: ") + formatError(error),
               partial: true,
+              rolledBack: rollback.ok,
+              rollbackError: rollback.error,
               user: {
                 id: user.id,
                 displayName: user.displayName,
@@ -436,26 +434,36 @@ export default {
   }
 };
 
-async function verifyAppPassword(request, env) {
+async function readJsonBody(request) {
+  try {
+    return await request.json();
+  } catch {
+    throw createError("请求体必须是有效的 JSON", 400);
+  }
+}
+
+function verifyAppPassword(candidate, env) {
   if (!env.APP_PASSWORD) {
     throw createError("缺少 APP_PASSWORD 配置", 500);
   }
 
-  let candidate = request.headers.get("x-app-password");
-
-  if (!candidate && request.method !== "GET") {
-    try {
-      const clone = request.clone();
-      const body = await clone.json();
-      candidate = body.appPassword;
-    } catch {
-      candidate = "";
-    }
-  }
-
-  if (!candidate || candidate !== env.APP_PASSWORD) {
+  if (!candidate || !timingSafeStringEqual(candidate, env.APP_PASSWORD)) {
     throw createError("访问密码错误", 401);
   }
+}
+
+function timingSafeStringEqual(a, b) {
+  const encoder = new TextEncoder();
+  const bufferA = encoder.encode(String(a));
+  const bufferB = encoder.encode(String(b));
+  const length = Math.max(bufferA.length, bufferB.length);
+
+  let mismatch = bufferA.length ^ bufferB.length;
+  for (let i = 0; i < length; i += 1) {
+    mismatch |= (bufferA[i] ?? 0) ^ (bufferB[i] ?? 0);
+  }
+
+  return mismatch === 0;
 }
 
 function validateCreatePayload(body, env) {
@@ -470,14 +478,31 @@ function validateCreatePayload(body, env) {
     throw createError("userName 只需要填写 @ 前面的账号部分", 400);
   }
 
+  if (!/^[a-zA-Z0-9._-]+$/.test(body.userName.trim())) {
+    throw createError("邮箱账号只能包含字母、数字、点、下划线或短横线", 400);
+  }
+
+  if (typeof body.forceChangePasswordNextSignIn !== "boolean") {
+    throw createError("forceChangePasswordNextSignIn 必须是布尔值", 400);
+  }
+
+  validateMailNickname(body.mailNickname);
+
   const usageLocation = (env.DEFAULT_USAGE_LOCATION || "").trim();
   if (!usageLocation) {
     throw createError("必须在 Worker 环境变量中配置 DEFAULT_USAGE_LOCATION", 400);
   }
 
+  if (!/^[a-zA-Z]{2}$/.test(usageLocation)) {
+    throw createError("DEFAULT_USAGE_LOCATION 必须是两位国家或地区代码", 400);
+  }
+
   getMailDomain(env);
   validateBlockedUserName(body.userName, env);
 }
+
+const graphTokenCache = new Map();
+const GRAPH_TOKEN_TTL_BUFFER_MS = 60_000;
 
 async function getGraphToken(env) {
   const tenantId = env.AZURE_TENANT_ID;
@@ -486,6 +511,12 @@ async function getGraphToken(env) {
 
   if (!tenantId || !clientId || !clientSecret) {
     throw createError("缺少 Azure / Graph 配置，请设置 AZURE_TENANT_ID、AZURE_CLIENT_ID、AZURE_CLIENT_SECRET", 500);
+  }
+
+  const cacheKey = tenantId + "|" + clientId;
+  const cached = graphTokenCache.get(cacheKey);
+  if (cached && cached.expiresAt > Date.now() && cached.clientSecret === clientSecret) {
+    return cached.accessToken;
   }
 
   const response = await fetch(
@@ -507,6 +538,15 @@ async function getGraphToken(env) {
   const data = await response.json();
   if (!response.ok) {
     throw createError("获取 Graph Token 失败: " + (data.error_description || data.error || response.statusText), response.status);
+  }
+
+  const expiresInMs = Number(data.expires_in || 0) * 1000;
+  if (expiresInMs > GRAPH_TOKEN_TTL_BUFFER_MS) {
+    graphTokenCache.set(cacheKey, {
+      accessToken: data.access_token,
+      clientSecret,
+      expiresAt: Date.now() + expiresInMs - GRAPH_TOKEN_TTL_BUFFER_MS
+    });
   }
 
   return data.access_token;
@@ -542,7 +582,7 @@ async function listAvailableLicenses(token) {
         label: item.skuPartNumber + " | skuId: " + item.skuId + " | Outlook相关服务: " + keptPlans.map((plan) => plan.servicePlanName).join(", ") + " | 可用席位: " + availableUnits
       };
     })
-    .filter((item) => item.keptPlans.length > 0)
+    .filter((item) => item.keptPlans.length > 0 && item.availableUnits > 0)
     .sort((a, b) => b.availableUnits - a.availableUnits);
 }
 
@@ -582,6 +622,25 @@ async function assignGraphLicense(token, userId, payload) {
   );
 }
 
+async function rollbackCreatedUser(token, userId) {
+  try {
+    await graphRequest(
+      token,
+      "https://graph.microsoft.com/v1.0/users/" + encodeURIComponent(userId),
+      {
+        method: "DELETE"
+      }
+    );
+
+    return { ok: true };
+  } catch (error) {
+    return {
+      ok: false,
+      error: formatError(error)
+    };
+  }
+}
+
 async function graphRequest(token, url, options = {}) {
   const response = await fetch(url, {
     method: options.method || "GET",
@@ -596,10 +655,26 @@ async function graphRequest(token, url, options = {}) {
   const data = text ? safeJsonParse(text) : {};
   if (!response.ok) {
     const graphMessage = data?.error?.message || response.statusText || "Graph API 请求失败";
-    throw createError(graphMessage, response.status);
+    throw createError(mapGraphErrorMessage(response.status, graphMessage), response.status);
   }
 
   return data;
+}
+
+function mapGraphErrorMessage(status, fallback) {
+  if (status === 401 || status === 403) {
+    return "Microsoft Graph 拒绝了请求，请确认应用注册的权限是否齐全并已授予管理员同意";
+  }
+
+  if (status === 429) {
+    return "Microsoft Graph 暂时被限流，请稍后再试";
+  }
+
+  if (status >= 500) {
+    return "Microsoft Graph 暂时不可用，请稍后再试";
+  }
+
+  return fallback;
 }
 
 async function verifyHCaptcha(token, request, env) {
@@ -611,10 +686,7 @@ async function verifyHCaptcha(token, request, env) {
     throw createError("缺少 HCAPTCHA_SITE_KEY 配置", 500);
   }
 
-  const remoteIp =
-    request.headers.get("CF-Connecting-IP") ||
-    request.headers.get("x-forwarded-for") ||
-    "";
+  const remoteIp = pickClientIp(request);
 
   const response = await fetch("https://api.hcaptcha.com/siteverify", {
     method: "POST",
@@ -634,6 +706,20 @@ async function verifyHCaptcha(token, request, env) {
   }
 }
 
+function pickClientIp(request) {
+  const cfIp = request.headers.get("CF-Connecting-IP");
+  if (cfIp) {
+    return cfIp.trim();
+  }
+
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (!forwarded) {
+    return "";
+  }
+
+  return forwarded.split(",")[0].trim();
+}
+
 function safeJsonParse(text) {
   try {
     return JSON.parse(text);
@@ -647,7 +733,7 @@ function shouldKeepExchangePlan(servicePlanName) {
     return false;
   }
 
-  return servicePlanName.startsWith("EXCHANGE");
+  return servicePlanName.toUpperCase().startsWith("EXCHANGE");
 }
 
 function renderHtmlPage(env) {
@@ -655,16 +741,31 @@ function renderHtmlPage(env) {
     throw createError("缺少 HCAPTCHA_SITE_KEY 配置", 500);
   }
 
-  return HTML_TEMPLATE.replaceAll("__HCAPTCHA_SITE_KEY__", escapeHtml(env.HCAPTCHA_SITE_KEY));
+  return HTML_TEMPLATE
+    .replaceAll("__HCAPTCHA_SITE_KEY__", escapeHtml(env.HCAPTCHA_SITE_KEY))
+    .replaceAll("__MAIL_DOMAIN__", escapeHtml(getMailDomain(env)));
 }
 
 function getMailDomain(env) {
   const domain = (env.MAIL_DOMAIN || "republicofmayo.com").trim().toLowerCase();
-  if (!domain || !domain.includes(".")) {
+  if (!isValidDomain(domain)) {
     throw createError("MAIL_DOMAIN 配置不正确", 500);
   }
 
   return domain;
+}
+
+function isValidDomain(domain) {
+  if (domain.length > 253) {
+    return false;
+  }
+
+  const labels = domain.split(".");
+  if (labels.length < 2) {
+    return false;
+  }
+
+  return labels.every((label) => /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(label));
 }
 
 function buildUserPrincipalName(userName, domain) {
@@ -676,13 +777,49 @@ function buildUserPrincipalName(userName, domain) {
   return normalizedUserName + "@" + domain;
 }
 
+function validateMailNickname(mailNickname) {
+  if (mailNickname === undefined || mailNickname === null || mailNickname === "") {
+    return;
+  }
+
+  if (typeof mailNickname !== "string") {
+    throw createError("邮件别名必须是文本", 400);
+  }
+
+  const normalizedMailNickname = mailNickname.trim().toLowerCase();
+  if (!normalizedMailNickname) {
+    return;
+  }
+
+  if (normalizedMailNickname.includes("@")) {
+    throw createError("邮件别名只需要填写 @ 前面的部分", 400);
+  }
+
+  if (!/^[a-z0-9._-]+$/.test(normalizedMailNickname)) {
+    throw createError("邮件别名只能包含字母、数字、点、下划线或短横线", 400);
+  }
+}
+
 function validateBlockedUserName(userName, env) {
   const normalizedUserName = String(userName || "").trim().toLowerCase();
   const blockedPrefixes = getBlockedUserPrefixes(env);
 
-  if (blockedPrefixes.includes(normalizedUserName)) {
+  if (blockedPrefixes.some((prefix) => isBlockedByPrefix(normalizedUserName, prefix))) {
     throw createError("该邮箱前缀不允许使用", 400);
   }
+}
+
+function isBlockedByPrefix(userName, prefix) {
+  if (!prefix || !userName.startsWith(prefix)) {
+    return false;
+  }
+
+  const nextChar = userName.charAt(prefix.length);
+  if (!nextChar) {
+    return true;
+  }
+
+  return !/[a-z]/.test(nextChar);
 }
 
 function getBlockedUserPrefixes(env) {

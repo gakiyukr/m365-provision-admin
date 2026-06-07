@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"C:/Projects/office_365_user - 副本\" status)",
+      "Bash(git -C \"C:/Projects/office_365_user - 副本\" log --oneline -10)",
+      "Bash(git -C \"C:/Projects/office_365_user - 副本\" diff src/index.js)",
+      "Bash(git -C \"C:/Projects/office_365_user - 副本\" diff package.json README.md)",
+      "Bash(npm test *)"
+    ]
+  }
+}
