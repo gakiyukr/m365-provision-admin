@@ -228,6 +228,7 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
     .captcha-tabs {
       display: flex;
       align-items: center;
+      justify-content: flex-end;
       gap: 8px;
       font-size: 13px;
       margin-bottom: 8px;
@@ -239,11 +240,13 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
     }
 
     .captcha-tab {
-      border: 0;
+      border: none;
+      border-radius: 0;
       background: none;
       padding: 0;
       font: inherit;
       font-size: 13px;
+      font-weight: 400;
       color: var(--muted);
       cursor: pointer;
       box-shadow: none;
@@ -252,11 +255,12 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
     .captcha-tab:hover {
       color: var(--accent);
       transform: none;
+      box-shadow: none;
     }
 
     .captcha-tab.active {
       color: var(--accent);
-      font-weight: 700;
+      font-weight: 600;
     }
 
     .captcha-sep {
@@ -265,7 +269,7 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
 
     .captcha-box {
       border: 1px solid var(--line);
-      border-radius: 16px;
+      border-radius: 10px;
       background: var(--panel-strong);
       padding: 14px;
       min-height: 74px;
@@ -277,6 +281,10 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
 
     .captcha-widget.active {
       display: block;
+    }
+
+    @media (max-width: 760px) {
+      .captcha-tabs { justify-content: flex-start; }
     }
   </style>
 </head>
@@ -325,15 +333,15 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
           </div>
         </div>
 
-        <div class="actions">
-          <button id="submitButton" type="submit">创建用户并分配 Outlook 授权</button>
-        </div>
-
         <div class="captcha">
           <div id="captchaTabs" class="captcha-tabs">
             <span class="captcha-label">验证：</span>
           </div>
           <div id="captchaBox" class="captcha-box"></div>
+        </div>
+
+        <div class="actions">
+          <button id="submitButton" type="submit">创建用户并分配 Outlook 授权</button>
         </div>
       </form>
     </section>
