@@ -32,11 +32,11 @@
 - 邮件别名（可选）
 - 初始密码
 - 是否首次登录强制改密
-- hCaptcha 验证
+- 人机验证（Turnstile / hCaptcha / Cap 任选其一）
 
 表单提交后，程序会按下面的顺序执行：
 
-1. 校验 hCaptcha
+1. 校验人机验证（按表单选择的服务调用对应的 siteverify 接口）
 2. 校验访问密码 `APP_PASSWORD`
 3. 使用 Azure 应用凭据向 Microsoft 身份平台获取 Graph access token
 4. 读取当前租户可用的订阅 SKU
@@ -66,12 +66,27 @@
 
 授予权限后，还需要执行管理员同意（Grant admin consent）。
 
-### 3. hCaptcha
+### 3. 人机验证服务（三选一或多配）
 
-这个项目在创建用户前要求完成 hCaptcha 验证，因此你需要准备：
+这个项目在创建用户前要求完成人机验证。支持三种服务，配置完整的才会出现在页面切换菜单里，可以同时配置多个：
+
+**Cloudflare Turnstile**
+
+- `TURNSTILE_SITE_KEY`
+- `TURNSTILE_SECRET_KEY`
+
+**hCaptcha**
 
 - `HCAPTCHA_SITE_KEY`
-- `HCAPTCHA_SECRET`
+- `HCAPTCHA_SECRET_KEY`
+
+**Cap（开源、self-hosted：https://github.com/tiagozip/cap ）**
+
+- `CAP_SITE_KEY`
+- `CAP_SECRET_KEY`
+- `CAP_SERVER_URL`（Cap Standalone 实例地址，验证端点会组合为 `{CAP_SERVER_URL}/{CAP_SITE_KEY}/siteverify`）
+
+本地开发可以使用各服务官方提供的测试密钥（例如 Turnstile 的 always-pass 测试密钥 `1x00000000000000000000AA` / `2x0000000000000000000000000000000AA`），无需真实站点。
 
 ## 环境变量
 
@@ -94,11 +109,13 @@
 - `DEFAULT_USAGE_LOCATION`
   新建用户的 `usageLocation`，必须是两位国家/地区代码，例如 `US`、`CN`、`HK`
 
-- `HCAPTCHA_SITE_KEY`
-  hCaptcha 站点公钥。这个值会被渲染到前端页面中，属于可公开信息
+人机验证密钥（按你启用的服务配置，见「前置条件 3」）：
 
-- `HCAPTCHA_SECRET`
-  hCaptcha 私钥，只能保存在服务端
+- `TURNSTILE_SITE_KEY` / `TURNSTILE_SECRET_KEY`
+- `HCAPTCHA_SITE_KEY` / `HCAPTCHA_SECRET_KEY`
+- `CAP_SITE_KEY` / `CAP_SECRET_KEY` / `CAP_SERVER_URL`
+
+注意：`HCAPTCHA_SECRET` 已更名为 `HCAPTCHA_SECRET_KEY`（与 R.O.MAYO idcard 项目保持一致），从旧版升级需要重新 `wrangler secret put`。
 
 ### 可选变量
 
@@ -169,7 +186,9 @@ npx wrangler secret put AZURE_CLIENT_ID
 npx wrangler secret put AZURE_CLIENT_SECRET
 npx wrangler secret put APP_PASSWORD
 npx wrangler secret put DEFAULT_USAGE_LOCATION
-npx wrangler secret put HCAPTCHA_SECRET
+npx wrangler secret put HCAPTCHA_SECRET_KEY
+npx wrangler secret put TURNSTILE_SECRET_KEY
+npx wrangler secret put CAP_SECRET_KEY
 ```
 
 像 `HCAPTCHA_SITE_KEY`、`MAIL_DOMAIN` 这类不需要保密的值，也可以放在 `wrangler.toml` 的 `[vars]` 中维护。
@@ -191,8 +210,8 @@ npx wrangler secret put HCAPTCHA_SECRET
 - `userName`
 - `mailNickname`
 - `password`
-- `hCaptchaToken`
-- `forceChangePasswordNextSignIn`
+- `captchaProvider`（`turnstile` / `hcaptcha` / `cap`，需与已配置的服务一致）
+- `captchaToken`
 
 其中：
 
@@ -221,7 +240,7 @@ npx wrangler secret put HCAPTCHA_SECRET
 - 不要把这个页面直接公开给所有人使用
 - 至少要启用 `APP_PASSWORD`
 - 更推荐额外套一层 Cloudflare Access
-- `AZURE_CLIENT_SECRET` 和 `HCAPTCHA_SECRET` 只能保存在服务端
+- `AZURE_CLIENT_SECRET` 和各人机验证服务的 secret key 只能保存在服务端
 - 页面和接口不会在创建完成后回显初始密码，管理员应通过安全渠道把初始密码交付给用户
 - 如果开启了“首次登录强制改密”，用户第一次登录后必须更新密码
 

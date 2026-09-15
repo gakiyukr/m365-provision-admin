@@ -220,6 +220,64 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
       .hero, .panel { padding: 18px; }
       .grid { grid-template-columns: 1fr; }
     }
+
+    .captcha {
+      margin-top: 16px;
+    }
+
+    .captcha-tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .captcha-label {
+      color: var(--muted);
+    }
+
+    .captcha-tab {
+      border: 0;
+      background: none;
+      padding: 0;
+      font: inherit;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      box-shadow: none;
+    }
+
+    .captcha-tab:hover {
+      color: var(--accent);
+      transform: none;
+    }
+
+    .captcha-tab.active {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .captcha-sep {
+      color: var(--line);
+    }
+
+    .captcha-box {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel-strong);
+      padding: 14px;
+      min-height: 74px;
+    }
+
+    .captcha-widget {
+      display: none;
+    }
+
+    .captcha-widget.active {
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -271,21 +329,33 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
           <button id="submitButton" type="submit">创建用户并分配 Outlook 授权</button>
         </div>
 
-        <div class="field full" style="margin-top: 16px;">
-          <div
-            class="h-captcha"
-            data-sitekey="__HCAPTCHA_SITE_KEY__"
-          ></div>
+        <div class="captcha">
+          <div id="captchaTabs" class="captcha-tabs">
+            <span class="captcha-label">验证：</span>
+          </div>
+          <div id="captchaBox" class="captcha-box"></div>
         </div>
       </form>
     </section>
   </div>
 
-  <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+  <script id="captcha-config" type="application/json">__CAPTCHA_CONFIG__</script>
   <script>
     const statusEl = document.getElementById("status");
     const form = document.getElementById("user-form");
     const submitButton = document.getElementById("submitButton");
+    const captchaTabs = document.getElementById("captchaTabs");
+    const captchaBox = document.getElementById("captchaBox");
+    const captchaConfig = JSON.parse(document.getElementById("captcha-config").textContent);
+    const CAPTCHA_SCRIPTS = {
+      cap: "https://cdn.jsdelivr.net/npm/cap-widget@0",
+      turnstile: "https://challenges.cloudflare.com/turnstile/v0/api.js",
+      hcaptcha: "https://js.hcaptcha.com/1/api.js"
+    };
+    let activeProvider = null;
+    const captchaTokens = {};
+    const captchaWidgets = {};
+    const captchaScriptPromises = {};
 
     function setStatus(type, message) {
       statusEl.className = "status show " + type;
@@ -302,9 +372,190 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
       submitButton.textContent = busy ? "处理中..." : "创建用户并分配 Outlook 授权";
     }
 
+    function providerLabel(provider) {
+      const entry = captchaConfig.providers.find((item) => item.id === provider);
+      return entry ? entry.label : provider;
+    }
+
+    function getCaptchaApi(provider) {
+      if (provider === "turnstile") return window.turnstile;
+      if (provider === "hcaptcha") return window.hcaptcha;
+      return null;
+    }
+
+    function loadCaptchaScript(provider) {
+      const src = CAPTCHA_SCRIPTS[provider];
+      if (!src) return Promise.reject(new Error("unknown provider"));
+      if (captchaScriptPromises[src]) return captchaScriptPromises[src];
+
+      captchaScriptPromises[src] = new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = src;
+        script.async = true;
+        script.onload = () => resolve();
+        script.onerror = () => {
+          delete captchaScriptPromises[src];
+          reject(new Error("failed to load " + src));
+        };
+        document.head.appendChild(script);
+      });
+      return captchaScriptPromises[src];
+    }
+
+    function renderCapWidget(provider, apiEndpoint) {
+      const widget = document.createElement("cap-widget");
+      widget.setAttribute("data-cap-api-endpoint", apiEndpoint);
+      widget.addEventListener("solve", (event) => {
+        captchaTokens[provider] = (event.detail && event.detail.token) || "";
+        clearStatus();
+      });
+      widget.addEventListener("error", () => {
+        captchaTokens[provider] = "";
+        setStatus("error", providerLabel(provider) + " 验证失败，请稍后再试。");
+      });
+      return widget;
+    }
+
+    function renderCaptchaWidget(provider) {
+      const container = document.getElementById("captchaWidget-" + provider);
+      const entry = captchaConfig.providers.find((item) => item.id === provider);
+      if (!container || !entry || captchaWidgets[provider] !== undefined) return;
+
+      if (provider === "cap") {
+        if (!entry.apiEndpoint) return;
+        const widget = renderCapWidget(provider, entry.apiEndpoint);
+        container.appendChild(widget);
+        captchaWidgets[provider] = widget;
+        return;
+      }
+
+      const api = getCaptchaApi(provider);
+      if (!api) return;
+
+      captchaWidgets[provider] = api.render(container, {
+        sitekey: entry.siteKey,
+        callback: (token) => {
+          captchaTokens[provider] = token || "";
+          clearStatus();
+        },
+        "expired-callback": () => {
+          captchaTokens[provider] = "";
+          setStatus("error", providerLabel(provider) + " 验证已过期，请重新完成验证。");
+        },
+        "error-callback": () => {
+          captchaTokens[provider] = "";
+          setStatus("error", providerLabel(provider) + " 验证失败，请稍后再试。");
+        }
+      });
+    }
+
+    function markActiveProvider(provider) {
+      activeProvider = provider;
+      captchaTabs.querySelectorAll(".captcha-tab").forEach((button) => {
+        button.classList.toggle("active", button.dataset.provider === provider);
+      });
+      captchaBox.querySelectorAll(".captcha-widget").forEach((container) => {
+        container.classList.toggle("active", container.dataset.provider === provider);
+      });
+    }
+
+    async function activateCaptcha(provider) {
+      markActiveProvider(provider);
+      clearStatus();
+      try {
+        await loadCaptchaScript(provider);
+        renderCaptchaWidget(provider);
+      } catch (error) {
+        setStatus("error", "无法载入或初始化 " + providerLabel(provider) + " 元件，请稍后再试。");
+      }
+    }
+
+    function resetCaptchaWidgets() {
+      captchaConfig.providers.forEach((entry) => {
+        const provider = entry.id;
+        captchaTokens[provider] = "";
+
+        if (provider === "cap") {
+          const existing = captchaWidgets.cap;
+          if (existing) {
+            existing.remove();
+            delete captchaWidgets.cap;
+            if (activeProvider === "cap" && entry.apiEndpoint) {
+              const container = document.getElementById("captchaWidget-cap");
+              if (container) {
+                const widget = renderCapWidget("cap", entry.apiEndpoint);
+                container.appendChild(widget);
+                captchaWidgets.cap = widget;
+              }
+            }
+          }
+          return;
+        }
+
+        const widgetId = captchaWidgets[provider];
+        const api = getCaptchaApi(provider);
+        if (widgetId !== undefined && api && api.reset) {
+          api.reset(widgetId);
+        }
+      });
+    }
+
+    function validateCaptcha() {
+      if (!captchaConfig.required) return true;
+
+      if (!captchaConfig.providers.length) {
+        setStatus("error", "站点尚未完成人机验证设置，暂时无法创建用户。");
+        return false;
+      }
+
+      if (!activeProvider || !captchaTokens[activeProvider]) {
+        setStatus("error", "请先完成人机验证。");
+        return false;
+      }
+
+      return true;
+    }
+
+    function buildCaptchaUi() {
+      if (!captchaConfig.providers.length) {
+        captchaBox.textContent = "站点尚未完成人机验证设置，暂时无法创建用户。";
+        return;
+      }
+
+      captchaConfig.providers.forEach((entry, index) => {
+        if (index > 0) {
+          const separator = document.createElement("span");
+          separator.className = "captcha-sep";
+          separator.textContent = "|";
+          captchaTabs.appendChild(separator);
+        }
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "captcha-tab";
+        button.dataset.provider = entry.id;
+        button.textContent = entry.label;
+        button.addEventListener("click", () => activateCaptcha(entry.id));
+        captchaTabs.appendChild(button);
+
+        const container = document.createElement("div");
+        container.id = "captchaWidget-" + entry.id;
+        container.className = "captcha-widget";
+        container.dataset.provider = entry.id;
+        captchaBox.appendChild(container);
+      });
+
+      activateCaptcha(captchaConfig.providers[0].id);
+    }
+
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
       clearStatus();
+
+      if (!validateCaptcha()) {
+        return;
+      }
+
       setBusy(true);
 
       const formData = new FormData(form);
@@ -314,9 +565,13 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
         userName: String(formData.get("userName") || "").trim(),
         mailNickname: String(formData.get("mailNickname") || "").trim(),
         password: String(formData.get("password") || "").trim(),
-        hCaptchaToken: String(formData.get("h-captcha-response") || "").trim(),
         forceChangePasswordNextSignIn: String(formData.get("forceChangePasswordNextSignIn")) === "true"
       };
+
+      if (activeProvider && captchaTokens[activeProvider]) {
+        payload.captchaProvider = activeProvider;
+        payload.captchaToken = captchaTokens[activeProvider];
+      }
 
       try {
         const response = await fetch("/api/create-user", {
@@ -350,15 +605,36 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
       } catch (error) {
         setStatus("error", error.message);
       } finally {
-        if (window.hcaptcha) {
-          window.hcaptcha.reset();
-        }
+        resetCaptchaWidgets();
         setBusy(false);
       }
     });
+
+    buildCaptchaUi();
   </script>
 </body>
 </html>`;
+const CAPTCHA_PROVIDERS = {
+  cap: {
+    label: "Cap",
+    siteKeyEnv: "CAP_SITE_KEY",
+    secretKeyEnv: "CAP_SECRET_KEY",
+    serverUrlEnv: "CAP_SERVER_URL"
+  },
+  turnstile: {
+    label: "Turnstile",
+    siteKeyEnv: "TURNSTILE_SITE_KEY",
+    secretKeyEnv: "TURNSTILE_SECRET_KEY",
+    verifyUrl: "https://challenges.cloudflare.com/turnstile/v0/siteverify"
+  },
+  hcaptcha: {
+    label: "hCaptcha",
+    siteKeyEnv: "HCAPTCHA_SITE_KEY",
+    secretKeyEnv: "HCAPTCHA_SECRET_KEY",
+    verifyUrl: "https://api.hcaptcha.com/siteverify"
+  }
+};
+
 
 export default {
   async fetch(request, env) {
@@ -372,7 +648,7 @@ export default {
       if (request.method === "POST" && url.pathname === "/api/create-user") {
         const body = await readJsonBody(request);
         validateCreatePayload(body, env);
-        await verifyHCaptcha(body.hCaptchaToken, request, env);
+        await verifyCaptcha(body, request, env);
         verifyAppPassword(body.appPassword, env);
 
         const token = await getGraphToken(env);
@@ -467,7 +743,7 @@ function timingSafeStringEqual(a, b) {
 }
 
 function validateCreatePayload(body, env) {
-  const requiredFields = ["displayName", "userName", "password", "hCaptchaToken"];
+  const requiredFields = ["displayName", "userName", "password"];
   for (const field of requiredFields) {
     if (!body?.[field] || typeof body[field] !== "string" || !body[field].trim()) {
       throw createError("缺少必填字段: " + field, 400);
@@ -677,47 +953,101 @@ function mapGraphErrorMessage(status, fallback) {
   return fallback;
 }
 
-async function verifyHCaptcha(token, request, env) {
-  if (!env.HCAPTCHA_SECRET) {
-    throw createError("缺少 HCAPTCHA_SECRET 配置", 500);
+function getProviderEnv(provider, key, env) {
+  const envName = CAPTCHA_PROVIDERS[provider][key];
+  return envName ? (env[envName] || "").trim() : "";
+}
+
+function getCaptchaSiteKey(provider, env) {
+  return getProviderEnv(provider, "siteKeyEnv", env) || null;
+}
+
+function getCaptchaSecretKey(provider, env) {
+  return getProviderEnv(provider, "secretKeyEnv", env) || null;
+}
+
+function getCaptchaServerUrl(provider, env) {
+  const envName = CAPTCHA_PROVIDERS[provider].serverUrlEnv;
+  if (!envName) {
+    return null;
   }
 
-  if (!env.HCAPTCHA_SITE_KEY) {
-    throw createError("缺少 HCAPTCHA_SITE_KEY 配置", 500);
+  return (env[envName] || "").trim().replace(/\/+$/, "") || null;
+}
+
+function buildCaptchaVerifyRequest(provider, token, remoteIp, env) {
+  const payload = {
+    secret: getCaptchaSecretKey(provider, env),
+    response: token
+  };
+
+  const serverUrl = getCaptchaServerUrl(provider, env);
+  if (!serverUrl && remoteIp) {
+    payload.remoteip = remoteIp;
   }
 
-  const remoteIp = pickClientIp(request);
+  if (serverUrl) {
+    return {
+      url: serverUrl + "/" + encodeURIComponent(getCaptchaSiteKey(provider, env)) + "/siteverify",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload)
+    };
+  }
 
-  const response = await fetch("https://api.hcaptcha.com/siteverify", {
-    method: "POST",
-    headers: {
-      "content-type": "application/x-www-form-urlencoded"
-    },
-    body: new URLSearchParams({
-      secret: env.HCAPTCHA_SECRET,
-      response: token,
-      remoteip: remoteIp
-    })
-  });
+  return {
+    url: CAPTCHA_PROVIDERS[provider].verifyUrl,
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams(payload).toString()
+  };
+}
 
-  const data = await response.json();
-  if (!response.ok || !data.success) {
-    throw createError("人机验证失败，请重试", 400);
+async function verifyCaptchaToken(provider, token, remoteIp, env) {
+  const { url, headers, body } = buildCaptchaVerifyRequest(provider, token, remoteIp, env);
+  const label = CAPTCHA_PROVIDERS[provider].label;
+
+  let response;
+  try {
+    response = await fetch(url, { method: "POST", headers, body });
+  } catch {
+    throw createError(label + " 人机验证服务暂时不可用，请稍后再试", 502);
+  }
+
+  const data = await response.json().catch(() => null);
+  if (!response.ok || !data || data.success !== true) {
+    throw createError(label + " 人机验证失败，请重试", 400);
   }
 }
 
+async function verifyCaptcha(body, request, env) {
+  const provider = String(body.captchaProvider || "").trim().toLowerCase();
+  if (!Object.hasOwn(CAPTCHA_PROVIDERS, provider)) {
+    throw createError("不支持的人机验证服务", 400);
+  }
+
+  if (!getCaptchaSiteKey(provider, env) || !getCaptchaSecretKey(provider, env)) {
+    throw createError("人机验证服务未配置完整", 500);
+  }
+
+  const token = String(body.captchaToken || "").trim();
+  if (!token) {
+    throw createError("请先完成人机验证", 400);
+  }
+
+  await verifyCaptchaToken(provider, token, pickClientIp(request), env);
+}
+
+
+const CLIENT_IP_HEADERS = ["CF-Connecting-IP", "X-Real-IP", "X-Forwarded-For"];
+
 function pickClientIp(request) {
-  const cfIp = request.headers.get("CF-Connecting-IP");
-  if (cfIp) {
-    return cfIp.trim();
+  for (const header of CLIENT_IP_HEADERS) {
+    const value = request.headers.get(header);
+    if (value) {
+      return value.split(",")[0].trim();
+    }
   }
 
-  const forwarded = request.headers.get("x-forwarded-for");
-  if (!forwarded) {
-    return "";
-  }
-
-  return forwarded.split(",")[0].trim();
+  return "";
 }
 
 function safeJsonParse(text) {
@@ -736,14 +1066,40 @@ function shouldKeepExchangePlan(servicePlanName) {
   return servicePlanName.toUpperCase().startsWith("EXCHANGE");
 }
 
+function getAvailableCaptchaProviders(env) {
+  return Object.keys(CAPTCHA_PROVIDERS)
+    .map((providerId) => {
+      const siteKey = getCaptchaSiteKey(providerId, env);
+      const serverUrl = getCaptchaServerUrl(providerId, env);
+
+      if (CAPTCHA_PROVIDERS[providerId].serverUrlEnv && !serverUrl) {
+        return null;
+      }
+
+      if (!siteKey || !getCaptchaSecretKey(providerId, env)) {
+        return null;
+      }
+
+      const entry = { id: providerId, label: CAPTCHA_PROVIDERS[providerId].label, siteKey };
+      if (serverUrl) {
+        entry.apiEndpoint = serverUrl + "/" + siteKey + "/";
+      }
+
+      return entry;
+    })
+    .filter(Boolean);
+}
+
+function encodeJsonForScriptTag(value) {
+  return JSON.stringify(value).replaceAll("<", "\\u003c");
+}
+
 function renderHtmlPage(env) {
-  if (!env.HCAPTCHA_SITE_KEY) {
-    throw createError("缺少 HCAPTCHA_SITE_KEY 配置", 500);
-  }
+  const providers = getAvailableCaptchaProviders(env);
 
   return HTML_TEMPLATE
-    .replaceAll("__HCAPTCHA_SITE_KEY__", escapeHtml(env.HCAPTCHA_SITE_KEY))
-    .replaceAll("__MAIL_DOMAIN__", escapeHtml(getMailDomain(env)));
+    .replaceAll("__MAIL_DOMAIN__", escapeHtml(getMailDomain(env)))
+    .replaceAll("__CAPTCHA_CONFIG__", encodeJsonForScriptTag({ required: providers.length > 0, providers }));
 }
 
 function getMailDomain(env) {
