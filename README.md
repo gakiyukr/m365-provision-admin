@@ -78,7 +78,7 @@
 **hCaptcha**
 
 - `HCAPTCHA_SITE_KEY`
-- `HCAPTCHA_SECRET_KEY`
+- `HCAPTCHA_SECRET`
 
 **Cap（开源、self-hosted：https://github.com/tiagozip/cap ）**
 
@@ -112,10 +112,8 @@
 人机验证密钥（按你启用的服务配置，见「前置条件 3」）：
 
 - `TURNSTILE_SITE_KEY` / `TURNSTILE_SECRET_KEY`
-- `HCAPTCHA_SITE_KEY` / `HCAPTCHA_SECRET_KEY`
+- `HCAPTCHA_SITE_KEY` / `HCAPTCHA_SECRET`
 - `CAP_SITE_KEY` / `CAP_SECRET_KEY` / `CAP_SERVER_URL`
-
-注意：`HCAPTCHA_SECRET` 已更名为 `HCAPTCHA_SECRET_KEY`（与 R.O.MAYO idcard 项目保持一致），从旧版升级需要重新 `wrangler secret put`。
 
 ### 可选变量
 
@@ -186,7 +184,7 @@ npx wrangler secret put AZURE_CLIENT_ID
 npx wrangler secret put AZURE_CLIENT_SECRET
 npx wrangler secret put APP_PASSWORD
 npx wrangler secret put DEFAULT_USAGE_LOCATION
-npx wrangler secret put HCAPTCHA_SECRET_KEY
+npx wrangler secret put HCAPTCHA_SECRET
 npx wrangler secret put TURNSTILE_SECRET_KEY
 npx wrangler secret put CAP_SECRET_KEY
 ```

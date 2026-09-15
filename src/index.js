@@ -638,7 +638,7 @@ const CAPTCHA_PROVIDERS = {
   hcaptcha: {
     label: "hCaptcha",
     siteKeyEnv: "HCAPTCHA_SITE_KEY",
-    secretKeyEnv: "HCAPTCHA_SECRET_KEY",
+    secretKeyEnv: "HCAPTCHA_SECRET",
     verifyUrl: "https://api.hcaptcha.com/siteverify"
   }
 };

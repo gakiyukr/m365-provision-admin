@@ -9,7 +9,7 @@ const baseEnv = {
   AZURE_CLIENT_SECRET: "client-secret",
   AZURE_TENANT_ID: "tenant-id",
   DEFAULT_USAGE_LOCATION: "US",
-  HCAPTCHA_SECRET_KEY: "hcaptcha-secret",
+  HCAPTCHA_SECRET: "hcaptcha-secret",
   HCAPTCHA_SITE_KEY: "hcaptcha-site-key",
   TURNSTILE_SECRET_KEY: "turnstile-secret",
   TURNSTILE_SITE_KEY: "turnstile-site-key"
