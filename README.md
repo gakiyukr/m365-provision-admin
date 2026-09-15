@@ -17,10 +17,26 @@
 
 - `src/index.js`
   Worker 主程序，包含前端页面、表单提交逻辑、后端 API、Graph 调用与许可证分配逻辑
+- `styles/app.css`
+  Tailwind v4 样式来源，内含 shadcn 主题 token
+- `styles/scan.html`
+  Tailwind 的内容扫描来源，集中列出模板实际用到的 class
+- `scripts/build-css.mjs`
+  将编译后的 CSS 内嵌回 `src/index.js` 的 `STYLES` 常数
 - `wrangler.toml`
   Cloudflare Workers 配置文件
 - `package.json`
   项目依赖与运行脚本
+
+## 界面样式
+
+界面沿用 shadcn-vue 的主题体系（oklch token、`--radius`、`dark` 类切换），
+视觉风格参考 `dianprata/nuxt-shadcn-dashboard`。为了维持单文件 Worker 的部署方式，
+Tailwind 在构建期离线编译成纯文字后内嵌，运行期不需要任何构建工具或额外依赖。
+
+样式不是手写的，**修改界面时要改 `styles/app.css` 或 `styles/scan.html`，再执行
+`npm run build:css`**。只改 `src/index.js` 的 class 而没更新 `scan.html`，Tailwind
+不会产生对应规则。
 
 ## 工作原理
 
@@ -150,7 +166,7 @@
 npm install
 ```
 
-启动本地开发环境：
+启动本地开发环境（会先编译样式）：
 
 ```bash
 npm run dev
@@ -171,6 +187,8 @@ npm install
 ```bash
 npm run deploy
 ```
+
+`deploy` 会自动先执行 `build:css`，无需手动编译样式。
 
 部署成功后，打开 Worker 对应地址即可使用。
 

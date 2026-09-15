@@ -347,7 +347,8 @@ test("does not render or script password disclosure in the form page", async () 
   const html = await response.text();
 
   assert.equal(response.status, 200);
-  assert.match(html, /<input id="password" name="password" type="password"/);
+  assert.match(html, /<input[^>]*id="password"[^>]*type="password"/s);
+  assert.match(html, /name="password"/);
   assert.doesNotMatch(html, /密码: "\s*\+\s*data\.user\.password/);
   assert.doesNotMatch(html, /密码: "\s*\+\s*payload\.password/);
 });

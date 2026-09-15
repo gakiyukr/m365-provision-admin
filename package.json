@@ -4,11 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build:css": "node scripts/build-css.mjs",
     "test": "node --test",
-    "dev": "wrangler dev",
+    "dev": "npm run build:css && wrangler dev",
+    "predeploy": "npm run build:css",
     "deploy": "wrangler deploy"
   },
   "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3",
     "wrangler": "^4.11.1"
   }
 }

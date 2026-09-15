@@ -1,0 +1,98 @@
+<!--
+  這個檔案不被執行，只作為 Tailwind v4 的內容來源。
+
+  Tailwind v4 預設會從 @import 的來源檔案推導內容，但本專案的 HTML 是
+  內嵌在 src/index.js 的模板字串中，掃描 JavaScript 會一併抓到測試字串
+  與錯誤訊息。把實際使用的 class 集中在這裡，可讓產出的 CSS 只包含真正
+  用到的樣式。每當 src/index.js 的模板新增 class，這裡要同步補上。
+
+  對應來源：dianprata/nuxt-shadcn-dashboard 的 shadcn-vue 元件
+  （button / input / label / card / select / alert）。
+-->
+
+<!-- 版面：外層容器與卡片 -->
+<div class="min-h-svh bg-background text-foreground antialiased">
+  <div class="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-10 sm:px-6">
+    <header class="flex flex-col gap-1">
+      <h1 class="text-2xl font-semibold tracking-tight">标题</h1>
+      <p class="text-sm text-muted-foreground">副标题</p>
+    </header>
+
+    <!-- Card -->
+    <div class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm">
+      <div class="flex flex-col gap-1 px-6">
+        <h2 class="text-base leading-none font-semibold">卡片标题</h2>
+        <p class="text-sm text-muted-foreground">卡片说明</p>
+      </div>
+      <div class="px-6">
+        <form class="grid gap-5">
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div class="grid gap-2 sm:col-span-2">
+              <label class="flex items-center gap-2 text-sm leading-none font-medium select-none">标签</label>
+              <input class="border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30">
+              <p class="text-[0.8rem] text-muted-foreground">字段提示</p>
+            </div>
+          </div>
+
+          <!-- Select -->
+          <select class="border-input flex h-9 w-full min-w-0 appearance-none rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30">
+            <option>选项</option>
+          </select>
+
+          <!-- Checkbox（原生 input 套 peer 樣式） -->
+          <div class="flex items-center gap-2">
+            <input type="checkbox" class="border-input size-4 shrink-0 rounded-[4px] border shadow-xs outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 dark:bg-input/30">
+            <label class="flex items-center gap-2 text-sm leading-none font-medium select-none">复选框</label>
+          </div>
+
+          <!-- Button：default / outline / ghost / sm / icon -->
+          <div class="flex items-center gap-2">
+            <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2">主要</button>
+            <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2">外框</button>
+            <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 shrink-0 outline-none hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 h-8 gap-1.5 px-3">次要</button>
+            <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 shrink-0 outline-none size-9 hover:bg-accent hover:text-accent-foreground">图标</button>
+          </div>
+
+          <!-- Alert：default / destructive -->
+          <div class="relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-lg border px-4 py-3 text-sm text-left has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-[>svg]:gap-x-3 [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current bg-card text-card-foreground">提示</div>
+          <div class="relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-lg border px-4 py-3 text-sm text-left bg-card text-destructive [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current">错误</div>
+
+          <!-- 状态文字 -->
+          <p class="text-sm text-muted-foreground">说明</p>
+          <p class="text-sm font-medium text-destructive">失败</p>
+          <p class="text-sm font-medium text-emerald-600 dark:text-emerald-400">成功</p>
+        </form>
+      </div>
+    </div>
+
+    <!-- captcha 切换：文字型 tab -->
+    <div class="flex flex-wrap items-center justify-end gap-2 text-sm sm:justify-end">
+      <span class="text-muted-foreground">验证：</span>
+      <button type="button" class="text-sm font-medium text-foreground underline underline-offset-4 transition-colors hover:text-foreground/80">选中</button>
+      <span class="text-border">|</span>
+      <button type="button" class="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">未选中</button>
+    </div>
+
+    <div class="border-border rounded-lg border bg-card p-3.5">
+      <div class="min-h-[74px]"></div>
+    </div>
+
+    <!-- 深色模式切换按钮 -->
+    <button type="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all shrink-0 outline-none size-9 hover:bg-accent hover:text-accent-foreground"></button>
+  </div>
+</div>
+
+<!-- 狀態顯示（動態字串：src/index.js 的 STATUS_TONE） -->
+<div class="rounded-lg border px-4 py-3 text-sm whitespace-pre-wrap"></div>
+<div class="border-emerald-600/30 bg-emerald-600/10 text-emerald-700 dark:text-emerald-400"></div>
+<div class="border-destructive/40 bg-destructive/10 text-destructive"></div>
+
+<!-- captcha tab（動態字串：TAB_CLASS / TAB_ACTIVE / TAB_IDLE） -->
+<span class="text-sm font-medium transition-colors outline-none"></span>
+<span class="text-foreground underline underline-offset-4"></span>
+<span class="text-muted-foreground hover:text-foreground"></span>
+<span class="text-border"></span>
+
+<!-- 深色模式切換 -->
+<div class="hidden"></div>
+<div class="size-4"></div>

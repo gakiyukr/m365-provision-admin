@@ -1,350 +1,136 @@
+// --- generated: styles ---
+const STYLES = "/*! tailwindcss v4.3.3 | MIT License | https://tailwindcss.com */\n@layer properties{@supports (((-webkit-hyphens:none)) and (not (margin-trim:inline))) or ((-moz-orient:inline) and (not (color:rgb(from red r g b)))){*,:before,:after,::backdrop{--tw-border-style:solid;--tw-leading:initial;--tw-font-weight:initial;--tw-tracking:initial;--tw-shadow:0 0 #0000;--tw-shadow-color:initial;--tw-shadow-alpha:100%;--tw-inset-shadow:0 0 #0000;--tw-inset-shadow-color:initial;--tw-inset-shadow-alpha:100%;--tw-ring-color:initial;--tw-ring-shadow:0 0 #0000;--tw-inset-ring-color:initial;--tw-inset-ring-shadow:0 0 #0000;--tw-ring-inset:initial;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-offset-shadow:0 0 #0000;--tw-outline-style:solid;--tw-translate-x:0;--tw-translate-y:0;--tw-translate-z:0}}}@layer theme{:root,:host{--font-sans:-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\";--font-mono:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace;--color-emerald-400:oklch(76.5% .177 163.223);--color-emerald-600:oklch(59.6% .145 163.225);--color-emerald-700:oklch(50.8% .118 165.612);--spacing:.25rem;--container-2xl:42rem;--text-sm:.875rem;--text-sm--line-height:calc(1.25 / .875);--text-base:1rem;--text-base--line-height:calc(1.5 / 1);--text-2xl:1.5rem;--text-2xl--line-height:calc(2 / 1.5);--font-weight-medium:500;--font-weight-semibold:600;--tracking-tight:-.025em;--default-transition-duration:.15s;--default-transition-timing-function:cubic-bezier(.4, 0, .2, 1);--default-font-family:var(--font-sans);--default-mono-font-family:var(--font-mono)}}@layer base{*,:after,:before,::backdrop{box-sizing:border-box;border:0 solid;margin:0;padding:0}::file-selector-button{box-sizing:border-box;border:0 solid;margin:0;padding:0}html,:host{-webkit-text-size-adjust:100%;tab-size:4;line-height:1.5;font-family:var(--default-font-family,-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\");font-feature-settings:var(--default-font-feature-settings,normal);font-variation-settings:var(--default-font-variation-settings,normal);-webkit-tap-highlight-color:transparent}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:var(--default-mono-font-family,ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace);font-feature-settings:var(--default-mono-font-feature-settings,normal);font-variation-settings:var(--default-mono-font-variation-settings,normal);font-size:1em}small{font-size:80%}sub,sup{vertical-align:baseline;font-size:75%;line-height:0;position:relative}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}:-moz-focusring:where(:not(iframe)){outline:auto}progress{vertical-align:baseline}summary{display:list-item}ol,ul,menu{list-style:none}img,svg,video,canvas,audio,iframe,embed,object{vertical-align:middle;display:block}img,video{max-width:100%;height:auto}button,input,select,optgroup,textarea{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}::file-selector-button{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}:where(select:is([multiple],[size])) optgroup{font-weight:bolder}:where(select:is([multiple],[size])) optgroup option{padding-inline-start:20px}::file-selector-button{margin-inline-end:4px}::placeholder{opacity:1}@supports (not ((-webkit-appearance:-apple-pay-button))) or (contain-intrinsic-size:1px){::placeholder{color:currentColor}@supports (color:color-mix(in lab, red, red)){::placeholder{color:color-mix(in oklab, currentcolor 50%, transparent)}}}textarea{resize:vertical}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-date-and-time-value{min-height:1lh;text-align:inherit}::-webkit-datetime-edit{display:inline-flex}::-webkit-datetime-edit-fields-wrapper{padding:0}::-webkit-datetime-edit{padding-block:0}::-webkit-datetime-edit-year-field{padding-block:0}::-webkit-datetime-edit-month-field{padding-block:0}::-webkit-datetime-edit-day-field{padding-block:0}::-webkit-datetime-edit-hour-field{padding-block:0}::-webkit-datetime-edit-minute-field{padding-block:0}::-webkit-datetime-edit-second-field{padding-block:0}::-webkit-datetime-edit-millisecond-field{padding-block:0}::-webkit-datetime-edit-meridiem-field{padding-block:0}::-webkit-calendar-picker-indicator{line-height:1}:-moz-ui-invalid{box-shadow:none}button,input:where([type=button],[type=reset],[type=submit]){appearance:button}::file-selector-button{appearance:button}::-webkit-inner-spin-button{height:auto}::-webkit-outer-spin-button{height:auto}[hidden]:where(:not([hidden=until-found])){display:none!important}:root{--background:oklch(100% 0 0);--foreground:oklch(14.5% 0 0);--card:oklch(100% 0 0);--card-foreground:oklch(14.5% 0 0);--primary:oklch(20.5% 0 0);--primary-foreground:oklch(98.5% 0 0);--secondary:oklch(97% 0 0);--secondary-foreground:oklch(20.5% 0 0);--muted:oklch(97% 0 0);--muted-foreground:oklch(55.6% 0 0);--accent:oklch(97% 0 0);--accent-foreground:oklch(20.5% 0 0);--destructive:oklch(57.7% .245 27.325);--border:oklch(92.2% 0 0);--input:oklch(92.2% 0 0);--ring:oklch(70.8% 0 0);--radius:.625rem}.dark{--background:oklch(14.5% 0 0);--foreground:oklch(98.5% 0 0);--card:oklch(20.5% 0 0);--card-foreground:oklch(98.5% 0 0);--primary:oklch(92.2% 0 0);--primary-foreground:oklch(20.5% 0 0);--secondary:oklch(26.9% 0 0);--secondary-foreground:oklch(98.5% 0 0);--muted:oklch(26.9% 0 0);--muted-foreground:oklch(70.8% 0 0);--accent:oklch(26.9% 0 0);--accent-foreground:oklch(98.5% 0 0);--destructive:oklch(70.4% .191 22.216);--border:oklch(100% 0 0/.1);--input:oklch(100% 0 0/.15);--ring:oklch(55.6% 0 0)}*{border-color:var(--border)}body{background-color:var(--background);color:var(--foreground)}}@layer components;@layer utilities{.relative{position:relative}.isolate{isolation:isolate}.container{width:100%}@media (min-width:40rem){.container{max-width:40rem}}@media (min-width:48rem){.container{max-width:48rem}}@media (min-width:64rem){.container{max-width:64rem}}@media (min-width:80rem){.container{max-width:80rem}}@media (min-width:96rem){.container{max-width:96rem}}.mx-auto{margin-inline:auto}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.inline-flex{display:inline-flex}.table{display:table}.size-4{width:calc(var(--spacing) * 4);height:calc(var(--spacing) * 4)}.size-9{width:calc(var(--spacing) * 9);height:calc(var(--spacing) * 9)}.h-8{height:calc(var(--spacing) * 8)}.h-9{height:calc(var(--spacing) * 9)}.min-h-\\[74px\\]{min-height:74px}.min-h-svh{min-height:100svh}.w-full{width:100%}.max-w-2xl{max-width:var(--container-2xl)}.min-w-0{min-width:0}.shrink-0{flex-shrink:0}.appearance-none{appearance:none}.grid-cols-\\[0_1fr\\]{grid-template-columns:0 1fr}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.items-start{align-items:flex-start}.justify-between{justify-content:space-between}.justify-center{justify-content:center}.justify-end{justify-content:flex-end}.gap-1{gap:var(--spacing)}.gap-1\\.5{gap:calc(var(--spacing) * 1.5)}.gap-2{gap:calc(var(--spacing) * 2)}.gap-3{gap:calc(var(--spacing) * 3)}.gap-4{gap:calc(var(--spacing) * 4)}.gap-5{gap:calc(var(--spacing) * 5)}.gap-6{gap:calc(var(--spacing) * 6)}.gap-y-0{row-gap:0}.gap-y-0\\.5{row-gap:calc(var(--spacing) * .5)}.rounded-\\[4px\\]{border-radius:4px}.rounded-lg{border-radius:var(--radius)}.rounded-md{border-radius:calc(var(--radius) - 2px)}.rounded-xl{border-radius:calc(var(--radius) + 4px)}.border{border-style:var(--tw-border-style);border-width:1px}.border-border{border-color:var(--border)}.border-destructive,.border-destructive\\/40{border-color:var(--destructive)}@supports (color:color-mix(in lab, red, red)){.border-destructive\\/40{border-color:color-mix(in oklab, var(--destructive) 40%, transparent)}}.border-emerald-600{border-color:var(--color-emerald-600)}.border-emerald-600\\/30{border-color:#0097674d}@supports (color:color-mix(in lab, red, red)){.border-emerald-600\\/30{border-color:color-mix(in oklab, var(--color-emerald-600) 30%, transparent)}}.border-input{border-color:var(--input)}.bg-background{background-color:var(--background)}.bg-card{background-color:var(--card)}.bg-destructive,.bg-destructive\\/10{background-color:var(--destructive)}@supports (color:color-mix(in lab, red, red)){.bg-destructive\\/10{background-color:color-mix(in oklab, var(--destructive) 10%, transparent)}}.bg-emerald-600{background-color:var(--color-emerald-600)}.bg-emerald-600\\/10{background-color:#0097671a}@supports (color:color-mix(in lab, red, red)){.bg-emerald-600\\/10{background-color:color-mix(in oklab, var(--color-emerald-600) 10%, transparent)}}.bg-primary{background-color:var(--primary)}.bg-transparent{background-color:#0000}.p-3{padding:calc(var(--spacing) * 3)}.p-3\\.5{padding:calc(var(--spacing) * 3.5)}.p-4{padding:calc(var(--spacing) * 4)}.px-3{padding-inline:calc(var(--spacing) * 3)}.px-4{padding-inline:calc(var(--spacing) * 4)}.px-6{padding-inline:calc(var(--spacing) * 6)}.py-1{padding-block:var(--spacing)}.py-2{padding-block:calc(var(--spacing) * 2)}.py-3{padding-block:calc(var(--spacing) * 3)}.py-6{padding-block:calc(var(--spacing) * 6)}.py-10{padding-block:calc(var(--spacing) * 10)}.text-left{text-align:left}.text-2xl{font-size:var(--text-2xl);line-height:var(--tw-leading,var(--text-2xl--line-height))}.text-base{font-size:var(--text-base);line-height:var(--tw-leading,var(--text-base--line-height))}.text-sm{font-size:var(--text-sm);line-height:var(--tw-leading,var(--text-sm--line-height))}.text-\\[0\\.8rem\\]{font-size:.8rem}.leading-none{--tw-leading:1;line-height:1}.font-medium{--tw-font-weight:var(--font-weight-medium);font-weight:var(--font-weight-medium)}.font-semibold{--tw-font-weight:var(--font-weight-semibold);font-weight:var(--font-weight-semibold)}.tracking-tight{--tw-tracking:var(--tracking-tight);letter-spacing:var(--tracking-tight)}.whitespace-nowrap{white-space:nowrap}.whitespace-pre-wrap{white-space:pre-wrap}.text-border{color:var(--border)}.text-card-foreground{color:var(--card-foreground)}.text-destructive{color:var(--destructive)}.text-emerald-600{color:var(--color-emerald-600)}.text-emerald-700{color:var(--color-emerald-700)}.text-foreground{color:var(--foreground)}.text-muted-foreground{color:var(--muted-foreground)}.text-primary-foreground{color:var(--primary-foreground)}.underline{text-decoration-line:underline}.underline-offset-4{text-underline-offset:4px}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.shadow-sm{--tw-shadow:0 1px 3px 0 var(--tw-shadow-color,#0000001a), 0 1px 2px -1px var(--tw-shadow-color,#0000001a);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.shadow-xs{--tw-shadow:0 1px 2px 0 var(--tw-shadow-color,#0000000d);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.outline{outline-style:var(--tw-outline-style);outline-width:1px}.transition-\\[color\\,box-shadow\\]{transition-property:color,box-shadow;transition-timing-function:var(--tw-ease,var(--default-transition-timing-function));transition-duration:var(--tw-duration,var(--default-transition-duration))}.transition-all{transition-property:all;transition-timing-function:var(--tw-ease,var(--default-transition-timing-function));transition-duration:var(--tw-duration,var(--default-transition-duration))}.transition-colors{transition-property:color,background-color,border-color,outline-color,text-decoration-color,fill,stroke,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to;transition-timing-function:var(--tw-ease,var(--default-transition-timing-function));transition-duration:var(--tw-duration,var(--default-transition-duration))}.outline-none{--tw-outline-style:none;outline-style:none}.select-none{-webkit-user-select:none;user-select:none}.placeholder\\:text-muted-foreground::placeholder{color:var(--muted-foreground)}@media (hover:hover){.hover\\:bg-accent:hover{background-color:var(--accent)}.hover\\:bg-primary\\/90:hover{background-color:var(--primary)}@supports (color:color-mix(in lab, red, red)){.hover\\:bg-primary\\/90:hover{background-color:color-mix(in oklab, var(--primary) 90%, transparent)}}.hover\\:text-accent-foreground:hover{color:var(--accent-foreground)}.hover\\:text-foreground:hover,.hover\\:text-foreground\\/80:hover{color:var(--foreground)}@supports (color:color-mix(in lab, red, red)){.hover\\:text-foreground\\/80:hover{color:color-mix(in oklab, var(--foreground) 80%, transparent)}}}.focus-visible\\:border-ring:focus-visible{border-color:var(--ring)}.focus-visible\\:ring-\\[3px\\]:focus-visible{--tw-ring-shadow:var(--tw-ring-inset,) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color,currentcolor);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.focus-visible\\:ring-ring\\/50:focus-visible{--tw-ring-color:var(--ring)}@supports (color:color-mix(in lab, red, red)){.focus-visible\\:ring-ring\\/50:focus-visible{--tw-ring-color:color-mix(in oklab, var(--ring) 50%, transparent)}}.disabled\\:pointer-events-none:disabled{pointer-events:none}.disabled\\:cursor-not-allowed:disabled{cursor:not-allowed}.disabled\\:opacity-50:disabled{opacity:.5}.has-\\[\\>svg\\]\\:grid-cols-\\[calc\\(var\\(--spacing\\)\\*4\\)_1fr\\]:has(>svg){grid-template-columns:calc(var(--spacing) * 4) 1fr}.has-\\[\\>svg\\]\\:gap-x-3:has(>svg){column-gap:calc(var(--spacing) * 3)}@media (min-width:40rem){.sm\\:col-span-2{grid-column:span 2/span 2}.sm\\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sm\\:justify-end{justify-content:flex-end}.sm\\:px-6{padding-inline:calc(var(--spacing) * 6)}}@media (min-width:48rem){.md\\:text-sm{font-size:var(--text-sm);line-height:var(--tw-leading,var(--text-sm--line-height))}}.dark\\:border-input:is(.dark *){border-color:var(--input)}.dark\\:bg-input\\/30:is(.dark *){background-color:var(--input)}@supports (color:color-mix(in lab, red, red)){.dark\\:bg-input\\/30:is(.dark *){background-color:color-mix(in oklab, var(--input) 30%, transparent)}}.dark\\:text-emerald-400:is(.dark *){color:var(--color-emerald-400)}@media (hover:hover){.dark\\:hover\\:bg-accent\\/50:is(.dark *):hover{background-color:var(--accent)}@supports (color:color-mix(in lab, red, red)){.dark\\:hover\\:bg-accent\\/50:is(.dark *):hover{background-color:color-mix(in oklab, var(--accent) 50%, transparent)}}.dark\\:hover\\:bg-input\\/50:is(.dark *):hover{background-color:var(--input)}@supports (color:color-mix(in lab, red, red)){.dark\\:hover\\:bg-input\\/50:is(.dark *):hover{background-color:color-mix(in oklab, var(--input) 50%, transparent)}}}.\\[\\&\\>svg\\]\\:size-4>svg{width:calc(var(--spacing) * 4);height:calc(var(--spacing) * 4)}.\\[\\&\\>svg\\]\\:translate-y-0\\.5>svg{--tw-translate-y:calc(var(--spacing) * .5);translate:var(--tw-translate-x) var(--tw-translate-y)}.\\[\\&\\>svg\\]\\:text-current>svg{color:currentColor}}@property --tw-border-style{syntax:\"*\";inherits:false;initial-value:solid}@property --tw-leading{syntax:\"*\";inherits:false}@property --tw-font-weight{syntax:\"*\";inherits:false}@property --tw-tracking{syntax:\"*\";inherits:false}@property --tw-shadow{syntax:\"*\";inherits:false;initial-value:0 0 #0000}@property --tw-shadow-color{syntax:\"*\";inherits:false}@property --tw-shadow-alpha{syntax:\"<percentage>\";inherits:false;initial-value:100%}@property --tw-inset-shadow{syntax:\"*\";inherits:false;initial-value:0 0 #0000}@property --tw-inset-shadow-color{syntax:\"*\";inherits:false}@property --tw-inset-shadow-alpha{syntax:\"<percentage>\";inherits:false;initial-value:100%}@property --tw-ring-color{syntax:\"*\";inherits:false}@property --tw-ring-shadow{syntax:\"*\";inherits:false;initial-value:0 0 #0000}@property --tw-inset-ring-color{syntax:\"*\";inherits:false}@property --tw-inset-ring-shadow{syntax:\"*\";inherits:false;initial-value:0 0 #0000}@property --tw-ring-inset{syntax:\"*\";inherits:false}@property --tw-ring-offset-width{syntax:\"<length>\";inherits:false;initial-value:0}@property --tw-ring-offset-color{syntax:\"*\";inherits:false;initial-value:#fff}@property --tw-ring-offset-shadow{syntax:\"*\";inherits:false;initial-value:0 0 #0000}@property --tw-outline-style{syntax:\"*\";inherits:false;initial-value:solid}@property --tw-translate-x{syntax:\"*\";inherits:false;initial-value:0}@property --tw-translate-y{syntax:\"*\";inherits:false;initial-value:0}@property --tw-translate-z{syntax:\"*\";inherits:false;initial-value:0}";
+// --- end generated: styles ---
+
 const HTML_TEMPLATE = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Microsoft 365 用户创建</title>
-  <style>
-    :root {
-      --bg: #f4f1ea;
-      --panel: rgba(255, 252, 245, 0.88);
-      --panel-strong: #fffaf0;
-      --line: rgba(100, 76, 38, 0.16);
-      --text: #2a241d;
-      --muted: #6b5f50;
-      --accent: #b55d32;
-      --accent-2: #d6a24a;
-      --success: #217346;
-      --error: #a33b2d;
-      --shadow: 0 24px 60px rgba(66, 40, 13, 0.12);
-      --radius: 22px;
-    }
-
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(214, 162, 74, 0.28), transparent 28%),
-        radial-gradient(circle at top right, rgba(181, 93, 50, 0.18), transparent 26%),
-        linear-gradient(145deg, #f3eee5 0%, #efe4d1 45%, #f7f2eb 100%);
-      min-height: 100vh;
-    }
-
-    .wrap {
-      width: min(980px, calc(100vw - 32px));
-      margin: 32px auto;
-      display: grid;
-      gap: 20px;
-    }
-
-    .hero, .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-    }
-
-    .hero {
-      padding: 28px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      width: 240px;
-      height: 240px;
-      right: -60px;
-      top: -80px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(214, 162, 74, 0.38), transparent 70%);
-    }
-
-    h1 {
-      margin: 0 0 8px;
-      font-size: clamp(30px, 5vw, 48px);
-      line-height: 1.02;
-      letter-spacing: -0.03em;
-    }
-
-    .hero p {
-      max-width: 680px;
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 15px;
-    }
-
-    .panel {
-      padding: 24px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .field {
-      display: grid;
-      gap: 8px;
-    }
-
-    .field.full {
-      grid-column: 1 / -1;
-    }
-
-    label {
-      font-size: 13px;
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    input, select, textarea, button {
-      font: inherit;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(92, 70, 36, 0.14);
-      background: rgba(255, 250, 240, 0.94);
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: rgba(181, 93, 50, 0.5);
-      box-shadow: 0 0 0 4px rgba(181, 93, 50, 0.12);
-      transform: translateY(-1px);
-    }
-
-    textarea {
-      min-height: 104px;
-      resize: vertical;
-    }
-
-    .hint {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .actions {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-top: 8px;
-    }
-
-    button {
-      border: 0;
-      padding: 14px 20px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, var(--accent), #c87434);
-      color: white;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 16px 30px rgba(181, 93, 50, 0.28);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 20px 36px rgba(181, 93, 50, 0.32);
-    }
-
-    button.secondary {
-      background: linear-gradient(135deg, #7c6a50, #94795a);
-      box-shadow: none;
-    }
-
-    button:disabled {
-      opacity: 0.7;
-      cursor: wait;
-      transform: none;
-    }
-
-    .status {
-      padding: 14px 16px;
-      border-radius: 16px;
-      display: none;
-      white-space: pre-wrap;
-      line-height: 1.6;
-      font-size: 14px;
-    }
-
-    .status.show { display: block; }
-    .status.success {
-      background: rgba(33, 115, 70, 0.1);
-      border: 1px solid rgba(33, 115, 70, 0.2);
-      color: var(--success);
-    }
-
-    .status.error {
-      background: rgba(163, 59, 45, 0.08);
-      border: 1px solid rgba(163, 59, 45, 0.16);
-      color: var(--error);
-    }
-
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .chip {
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(214, 162, 74, 0.12);
-      border: 1px solid rgba(214, 162, 74, 0.24);
-      color: #715114;
-      font-size: 12px;
-    }
-
-    .footer-note {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    @media (max-width: 760px) {
-      .wrap { margin: 16px auto; }
-      .hero, .panel { padding: 18px; }
-      .grid { grid-template-columns: 1fr; }
-    }
-
-    .captcha {
-      margin-top: 16px;
-    }
-
-    .captcha-tabs {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 8px;
-      font-size: 13px;
-      margin-bottom: 8px;
-      flex-wrap: wrap;
-    }
-
-    .captcha-label {
-      color: var(--muted);
-    }
-
-    .captcha-tab {
-      border: none;
-      border-radius: 0;
-      background: none;
-      padding: 0;
-      font: inherit;
-      font-size: 13px;
-      font-weight: 400;
-      color: var(--muted);
-      cursor: pointer;
-      box-shadow: none;
-    }
-
-    .captcha-tab:hover {
-      color: var(--accent);
-      transform: none;
-      box-shadow: none;
-    }
-
-    .captcha-tab.active {
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    .captcha-sep {
-      color: var(--line);
-    }
-
-    .captcha-box {
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: var(--panel-strong);
-      padding: 14px;
-      min-height: 74px;
-    }
-
-    .captcha-widget {
-      display: none;
-    }
-
-    .captcha-widget.active {
-      display: block;
-    }
-
-    @media (max-width: 760px) {
-      .captcha-tabs { justify-content: flex-start; }
-    }
-  </style>
+  <style>__STYLES__</style>
 </head>
-<body>
-  <div class="wrap">
-    <section class="hero">
-      <h1>Microsoft 365<br />用户自动创建</h1>
-    </section>
+<body class="min-h-svh bg-background text-foreground antialiased">
+  <div class="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-10 sm:px-6">
+    <header class="flex items-start justify-between gap-4">
+      <div class="flex flex-col gap-1">
+        <h1 class="text-2xl font-semibold tracking-tight">Microsoft 365 用户创建</h1>
+        <p class="text-sm text-muted-foreground">自动创建邮箱用户并分配 Exchange 授权。</p>
+      </div>
+      <button
+        id="themeToggle"
+        type="button"
+        aria-label="切换深色模式"
+        class="inline-flex size-9 shrink-0 items-center justify-center rounded-md text-sm font-medium outline-none transition-all hover:bg-accent hover:text-accent-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+      >
+        <svg id="themeIconLight" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></svg>
+        <svg id="themeIconDark" class="hidden size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4" /><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" /></svg>
+      </button>
+    </header>
 
-    <section class="panel">
-      <div id="status" class="status"></div>
-      <form id="user-form">
-        <div class="grid">
-          <div class="field full">
-            <label for="appPassword">访问密码</label>
-            <input id="appPassword" name="appPassword" type="password" placeholder="输入页面访问密码" required />
+    <div class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm">
+      <div class="flex flex-col gap-1 px-6">
+        <h2 class="text-base leading-none font-semibold">用户信息</h2>
+        <p class="text-sm text-muted-foreground">密码不会回显，请通过安全渠道交付给用户。</p>
+      </div>
+
+      <div class="px-6">
+        <form id="user-form" class="grid gap-5">
+          <div class="grid gap-2">
+            <label for="appPassword" class="flex items-center gap-2 text-sm leading-none font-medium select-none">访问密码</label>
+            <input
+              id="appPassword"
+              name="appPassword"
+              type="password"
+              placeholder="输入页面访问密码"
+              autocomplete="current-password"
+              required
+              class="border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30"
+            />
           </div>
 
-          <div class="field">
-            <label for="displayName">显示名称</label>
-            <input id="displayName" name="displayName" type="text" placeholder="例如 张三" required />
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div class="grid gap-2">
+              <label for="displayName" class="flex items-center gap-2 text-sm leading-none font-medium select-none">显示名称</label>
+              <input
+                id="displayName"
+                name="displayName"
+                type="text"
+                placeholder="例如 张三"
+                required
+                class="border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30"
+              />
+            </div>
+
+            <div class="grid gap-2">
+              <label for="userName" class="flex items-center gap-2 text-sm leading-none font-medium select-none">邮箱账号</label>
+              <input
+                id="userName"
+                name="userName"
+                type="text"
+                placeholder="例如 zhangsan"
+                required
+                class="border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30"
+              />
+              <p class="text-[0.8rem] text-muted-foreground">系统会自动创建为 @__MAIL_DOMAIN__ 邮箱。</p>
+            </div>
+
+            <div class="grid gap-2">
+              <label for="mailNickname" class="flex items-center gap-2 text-sm leading-none font-medium select-none">邮件别名</label>
+              <input
+                id="mailNickname"
+                name="mailNickname"
+                type="text"
+                placeholder="默认自动取 @ 前面的部分"
+                class="border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30"
+              />
+            </div>
+
+            <div class="grid gap-2">
+              <label for="password" class="flex items-center gap-2 text-sm leading-none font-medium select-none">初始密码</label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="例如 StrongPass!2026"
+                autocomplete="new-password"
+                required
+                class="border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30"
+              />
+            </div>
           </div>
 
-          <div class="field">
-            <label for="userName">邮箱账号</label>
-            <input id="userName" name="userName" type="text" placeholder="例如 zhangsan" required />
-            <div class="hint">系统会自动创建为 @__MAIL_DOMAIN__ 邮箱。</div>
-          </div>
-
-          <div class="field">
-            <label for="mailNickname">邮件别名</label>
-            <input id="mailNickname" name="mailNickname" type="text" placeholder="默认自动取 @ 前面的部分" />
-          </div>
-
-          <div class="field">
-            <label for="password">初始密码</label>
-            <input id="password" name="password" type="password" placeholder="例如 StrongPass!2026" autocomplete="new-password" required />
-          </div>
-
-          <div class="field">
-            <label for="forceChangePasswordNextSignIn">首次登录改密</label>
-            <select id="forceChangePasswordNextSignIn" name="forceChangePasswordNextSignIn">
-              <option value="true" selected>是</option>
-              <option value="false">否</option>
+          <div class="flex items-center gap-2">
+            <select
+              id="forceChangePasswordNextSignIn"
+              name="forceChangePasswordNextSignIn"
+              class="border-input flex h-9 w-full min-w-0 appearance-none rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30"
+            >
+              <option value="true" selected>首次登录强制改密：是</option>
+              <option value="false">首次登录强制改密：否</option>
             </select>
           </div>
-        </div>
 
-        <div class="captcha">
-          <div id="captchaTabs" class="captcha-tabs">
-            <span class="captcha-label">验证：</span>
+          <div class="grid gap-3 rounded-lg border p-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="text-sm font-medium">人机验证</span>
+              <div id="captchaTabs" class="flex flex-wrap items-center gap-2 text-sm"></div>
+            </div>
+            <div id="captchaBox" class="border-border bg-background rounded-md border p-3.5"></div>
           </div>
-          <div id="captchaBox" class="captcha-box"></div>
-        </div>
 
-        <div class="actions">
-          <button id="submitButton" type="submit">创建用户并分配 Outlook 授权</button>
-        </div>
-      </form>
-    </section>
+          <div id="status" class="hidden rounded-lg border px-4 py-3 text-sm" role="status"></div>
+
+          <button
+            id="submitButton"
+            type="submit"
+            class="bg-primary text-primary-foreground inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium whitespace-nowrap shadow-xs transition-all outline-none hover:bg-primary/90 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50"
+          >
+            创建用户并分配 Outlook 授权
+          </button>
+        </form>
+      </div>
+    </div>
   </div>
 
   <script id="captcha-config" type="application/json">__CAPTCHA_CONFIG__</script>
@@ -360,18 +146,27 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
       turnstile: "https://challenges.cloudflare.com/turnstile/v0/api.js",
       hcaptcha: "https://js.hcaptcha.com/1/api.js"
     };
+    const TAB_CLASS = "text-sm font-medium transition-colors outline-none";
+    const TAB_ACTIVE = "text-foreground underline underline-offset-4";
+    const TAB_IDLE = "text-muted-foreground hover:text-foreground";
     let activeProvider = null;
     const captchaTokens = {};
     const captchaWidgets = {};
     const captchaScriptPromises = {};
 
+    const STATUS_BASE = "rounded-lg border px-4 py-3 text-sm whitespace-pre-wrap";
+    const STATUS_TONE = {
+      success: "border-emerald-600/30 bg-emerald-600/10 text-emerald-700 dark:text-emerald-400",
+      error: "border-destructive/40 bg-destructive/10 text-destructive"
+    };
+
     function setStatus(type, message) {
-      statusEl.className = "status show " + type;
+      statusEl.className = STATUS_BASE + " " + (STATUS_TONE[type] || STATUS_TONE.error);
       statusEl.textContent = message;
     }
 
     function clearStatus() {
-      statusEl.className = "status";
+      statusEl.className = STATUS_BASE + " hidden";
       statusEl.textContent = "";
     }
 
@@ -459,8 +254,9 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
 
     function markActiveProvider(provider) {
       activeProvider = provider;
-      captchaTabs.querySelectorAll(".captcha-tab").forEach((button) => {
-        button.classList.toggle("active", button.dataset.provider === provider);
+      captchaTabs.querySelectorAll("[data-provider]").forEach((button) => {
+        const on = button.dataset.provider === provider;
+        button.className = TAB_CLASS + " " + (on ? TAB_ACTIVE : TAB_IDLE);
       });
       captchaBox.querySelectorAll(".captcha-widget").forEach((container) => {
         container.classList.toggle("active", container.dataset.provider === provider);
@@ -533,14 +329,14 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
       captchaConfig.providers.forEach((entry, index) => {
         if (index > 0) {
           const separator = document.createElement("span");
-          separator.className = "captcha-sep";
+          separator.className = "text-border";
           separator.textContent = "|";
           captchaTabs.appendChild(separator);
         }
 
         const button = document.createElement("button");
         button.type = "button";
-        button.className = "captcha-tab";
+        button.className = TAB_CLASS + " " + TAB_IDLE;
         button.dataset.provider = entry.id;
         button.textContent = entry.label;
         button.addEventListener("click", () => activateCaptcha(entry.id));
@@ -617,6 +413,33 @@ const HTML_TEMPLATE = `<!DOCTYPE html>
         setBusy(false);
       }
     });
+
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIconLight = document.getElementById("themeIconLight");
+    const themeIconDark = document.getElementById("themeIconDark");
+
+    function applyTheme(dark) {
+      document.documentElement.classList.toggle("dark", dark);
+      themeIconLight.classList.toggle("hidden", dark);
+      themeIconDark.classList.toggle("hidden", !dark);
+    }
+
+    themeToggle.addEventListener("click", () => {
+      const dark = !document.documentElement.classList.contains("dark");
+      applyTheme(dark);
+      try {
+        localStorage.setItem("theme", dark ? "dark" : "light");
+      } catch {
+        // 私密模式或停用儲存時忽略，切換本身仍生效。
+      }
+    });
+
+    try {
+      const saved = localStorage.getItem("theme");
+      applyTheme(saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches);
+    } catch {
+      applyTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
+    }
 
     buildCaptchaUi();
   </script>
@@ -1106,6 +929,7 @@ function renderHtmlPage(env) {
   const providers = getAvailableCaptchaProviders(env);
 
   return HTML_TEMPLATE
+    .replaceAll("__STYLES__", STYLES)
     .replaceAll("__MAIL_DOMAIN__", escapeHtml(getMailDomain(env)))
     .replaceAll("__CAPTCHA_CONFIG__", encodeJsonForScriptTag({ required: providers.length > 0, providers }));
 }
